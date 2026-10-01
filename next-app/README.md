@@ -12,7 +12,7 @@ npm run dev
 
 Open `http://localhost:3000`. Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` to `.env.local` for live auth and database access. Without credentials, the storefront uses 100 demo products with Unsplash photos; authentication and order persistence are unavailable.
 
-The shop includes an optional authenticated gear advisor. Add the server-only `OPENAI_API_KEY` to enable conversational suggestions; normal search remains available without it.
+The shop includes an optional authenticated gear advisor using Groq. Add a server-only `GROQ_API_KEY` to enable conversational suggestions; normal search remains available without it. The default model is `openai/gpt-oss-20b`, subject to Groq account quotas and rate limits.
 
 ## Supabase
 
@@ -20,6 +20,6 @@ In the Supabase SQL Editor, run `supabase/schema.sql`, then `supabase/demo-produ
 
 ## Vercel
 
-Import the Git repository and set **Root Directory** to `next-app`. Select the detected **Next.js** framework, not Services. Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in Vercel project environment variables. Optionally add server-only `OPENAI_API_KEY` and `OPENAI_MODEL` for the gear advisor, then deploy.
+Import the Git repository and set **Root Directory** to `next-app`. Select the detected **Next.js** framework, not Services. Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in Vercel project environment variables. Optionally add server-only `GROQ_API_KEY` and `GROQ_MODEL` for the gear advisor, then deploy.
 
 For first-admin setup and production checks, see [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md). Checkout is cash-on-delivery only; there is no online payment provider.

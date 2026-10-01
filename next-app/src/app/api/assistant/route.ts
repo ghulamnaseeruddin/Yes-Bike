@@ -15,9 +15,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Ask a question between 3 and 500 characters." }, { status: 400 });
   }
 
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
-    return NextResponse.json({ error: "The product advisor is not configured. Use shop search or add OPENAI_API_KEY on the server." }, { status: 503 });
+    return NextResponse.json({ error: "The product advisor is not configured. Use shop search or add GROQ_API_KEY on the server." }, { status: 503 });
   }
 
   try {
@@ -30,12 +30,12 @@ export async function POST(request: Request) {
     const catalog = products.slice(0, 80).map(({ id, name, category, description, price, discountPrice, sizes, colors, stock }) => ({
       id, name, category, description, price: discountPrice ?? price, sizes, colors, inStock: stock > 0,
     }));
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
       signal: AbortSignal.timeout(15_000),
       body: JSON.stringify({
-        model: process.env.OPENAI_MODEL || "gpt-4o-mini",
+        model: process.env.GROQ_MODEL || "openai/gpt-oss-20b",
         temperature: 0.2,
         response_format: { type: "json_object" },
         messages: [
