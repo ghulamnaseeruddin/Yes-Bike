@@ -66,10 +66,30 @@ create table if not exists public.reviews (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.wishlist_items (
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  product_id uuid not null references public.products(id) on delete cascade,
+  created_at timestamptz not null default now(),
+  primary key (user_id, product_id)
+);
+
+create table if not exists public.contacts (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  email text not null,
+  phone text,
+  subject text not null,
+  message text not null,
+  status text not null default 'New' check (status in ('New', 'In progress', 'Resolved')),
+  created_at timestamptz not null default now()
+);
+
 create index if not exists idx_products_category on public.products(category);
 create index if not exists idx_products_featured on public.products(featured);
 create index if not exists idx_orders_user on public.orders(user_id);
 create index if not exists idx_order_items_order on public.order_items(order_id);
+create index if not exists idx_wishlist_user on public.wishlist_items(user_id);
+create index if not exists idx_contacts_created on public.contacts(created_at desc);
 
 create or replace function public.handle_new_user()
 returns trigger
@@ -111,6 +131,8 @@ alter table public.products enable row level security;
 alter table public.orders enable row level security;
 alter table public.order_items enable row level security;
 alter table public.reviews enable row level security;
+alter table public.wishlist_items enable row level security;
+alter table public.contacts enable row level security;
 
 drop policy if exists "Products are publicly readable" on public.products;
 create policy "Products are publicly readable" on public.products
@@ -169,6 +191,37 @@ drop policy if exists "Users can create own reviews" on public.reviews;
 create policy "Users can create own reviews" on public.reviews
 for insert to authenticated with check ((select auth.uid()) = user_id);
 
+drop policy if exists "Users can read own wishlist" on public.wishlist_items;
+create policy "Users can read own wishlist" on public.wishlist_items
+for select to authenticated using ((select auth.uid()) = user_id);
+
+drop policy if exists "Users can add to own wishlist" on public.wishlist_items;
+create policy "Users can add to own wishlist" on public.wishlist_items
+for insert to authenticated with check ((select auth.uid()) = user_id);
+
+drop policy if exists "Users can remove from own wishlist" on public.wishlist_items;
+create policy "Users can remove from own wishlist" on public.wishlist_items
+for delete to authenticated using ((select auth.uid()) = user_id);
+
+drop policy if exists "Visitors can submit contact messages" on public.contacts;
+create policy "Visitors can submit contact messages" on public.contacts
+for insert to anon, authenticated with check (
+  length(trim(name)) >= 2
+  and position('@' in email) >= 2
+  and length(trim(subject)) >= 3
+  and length(trim(message)) >= 10
+  and status = 'New'
+);
+
+drop policy if exists "Admins can read contact messages" on public.contacts;
+create policy "Admins can read contact messages" on public.contacts
+for select to authenticated using ((select public.is_admin()));
+
+drop policy if exists "Admins can update contact status" on public.contacts;
+create policy "Admins can update contact status" on public.contacts
+for update to authenticated using ((select public.is_admin()))
+with check ((select public.is_admin()));
+
 grant usage on schema public to anon, authenticated;
 revoke insert, update, delete on public.profiles, public.products, public.orders, public.order_items, public.reviews from anon, authenticated;
 grant select on public.products, public.reviews to anon, authenticated;
@@ -177,6 +230,10 @@ grant insert on public.reviews to authenticated;
 grant update (full_name, phone, role) on public.profiles to authenticated;
 grant insert, update, delete on public.products to authenticated;
 grant update (order_status) on public.orders to authenticated;
+grant select, insert, delete on public.wishlist_items to authenticated;
+grant insert (name, email, phone, subject, message) on public.contacts to anon, authenticated;
+grant select on public.contacts to authenticated;
+grant update (status) on public.contacts to authenticated;
 
 create or replace function public.place_cod_order(
   p_customer_name text,

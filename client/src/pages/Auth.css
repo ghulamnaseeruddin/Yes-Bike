@@ -1,9 +1,0 @@
-.yb-auth-page {
-  min-height: calc(100vh - 200px);
-  display: flex; align-items: center; justify-content: center;
-  padding: 56px 24px;
-}
-.yb-auth-card { width: 100%; max-width: 420px; padding: 36px; }
-.yb-auth-card h1 { font-size: 1.6rem; }
-.yb-auth-switch { text-align: center; margin-top: 18px; font-size: 0.9rem; }
-.yb-auth-switch a { color: var(--ember-bright); font-weight: 600; }

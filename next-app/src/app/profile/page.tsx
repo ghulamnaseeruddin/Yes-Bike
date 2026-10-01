@@ -1,11 +1,13 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
 type Profile = { id: string; email: string; full_name: string | null; phone: string | null; role: string };
 
 export default function ProfilePage() {
+  const router = useRouter();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
@@ -61,7 +63,7 @@ export default function ProfilePage() {
   async function signOut() {
     const { error } = await supabase.auth.signOut();
     if (error) setMessage(error.message);
-    else window.location.assign("/auth");
+    else router.push("/auth");
   }
 
   return (

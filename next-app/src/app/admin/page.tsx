@@ -10,6 +10,7 @@ type Product = {
 };
 type Order = { id: string; customer_name: string; customer_email: string; customer_phone: string; order_status: string; total_price: number | string; created_at: string };
 type UserProfile = { id: string; email: string; full_name: string | null; role: "customer" | "admin" };
+type ContactMessage = { id: string; name: string; email: string; phone: string | null; subject: string; message: string; status: "New" | "In progress" | "Resolved"; created_at: string };
 type ProductDraft = { name: string; description: string; price: string; discountPrice: string; category: string; stock: string; image: string; sizes: string; colors: string; featured: boolean };
 
 const emptyDraft: ProductDraft = { name: "", description: "", price: "", discountPrice: "", category: "", stock: "0", image: "", sizes: "", colors: "", featured: false };
@@ -22,6 +23,7 @@ export default function AdminPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [users, setUsers] = useState<UserProfile[]>([]);
+  const [contacts, setContacts] = useState<ContactMessage[]>([]);
   const [draft, setDraft] = useState<ProductDraft>(emptyDraft);
   const [editingId, setEditingId] = useState("");
   const [message, setMessage] = useState("");
@@ -47,16 +49,18 @@ export default function AdminPage() {
       }
       setAuthorized(true);
 
-      const [productResult, orderResult, userResult] = await Promise.all([
+      const [productResult, orderResult, userResult, contactResult] = await Promise.all([
         supabase.from("products").select("*").order("created_at", { ascending: false }),
         supabase.from("orders").select("id,customer_name,customer_email,customer_phone,order_status,total_price,created_at").order("created_at", { ascending: false }),
         supabase.from("profiles").select("id,email,full_name,role").order("created_at", { ascending: false }),
+        supabase.from("contacts").select("id,name,email,phone,subject,message,status,created_at").order("created_at", { ascending: false }),
       ]);
-      const error = productResult.error ?? orderResult.error ?? userResult.error;
+      const error = productResult.error ?? orderResult.error ?? userResult.error ?? contactResult.error;
       if (error) setMessage(error.message);
       setProducts((productResult.data ?? []) as Product[]);
       setOrders((orderResult.data ?? []) as Order[]);
       setUsers((userResult.data ?? []) as UserProfile[]);
+      setContacts((contactResult.data ?? []) as ContactMessage[]);
       setLoading(false);
     }
     void loadDashboard();
@@ -145,6 +149,18 @@ export default function AdminPage() {
     setMessage("User role updated.");
   }
 
+  async function changeContactStatus(contactId: string, status: ContactMessage["status"]) {
+    const { error } = await supabase.from("contacts").update({ status }).eq("id", contactId);
+    if (error) {
+      setMessage(error.message);
+      return;
+    }
+    setContacts((current) => current.map((contact) => contact.id === contactId ? { ...contact, status } : contact));
+  }
+  const codOrderValue = orders
+    .filter((order) => order.order_status !== "Cancelled")
+    .reduce((total, order) => total + Number(order.total_price), 0);
+
   if (loading) return <main style={{ maxWidth: 1200, margin: "0 auto", padding: 32 }}><p>Loading admin workspace...</p></main>;
   if (!authorized) return <main style={{ maxWidth: 720, margin: "0 auto", padding: "48px 20px" }}><section style={panelStyle}><h1>Admin access</h1><p>{message}</p><a href="/auth" style={{ color: "#f97316" }}>Sign in</a></section></main>;
 
@@ -153,7 +169,7 @@ export default function AdminPage() {
       <header><p style={{ color: "#f97316", textTransform: "uppercase", fontWeight: 700 }}>YES BIKE</p><h1 style={{ margin: 0 }}>Admin workspace</h1></header>
       {message && <p role="status">{message}</p>}
       <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 12 }}>
-        {[["Products", products.length], ["Orders", orders.length], ["Customers", users.filter((user) => user.role === "customer").length]].map(([label, value]) => <article key={String(label)} style={panelStyle}><span style={{ color: "#aab2bd" }}>{label}</span><strong style={{ display: "block", fontSize: 28, marginTop: 8 }}>{value}</strong></article>)}
+        {[["Products", products.length], ["Orders", orders.length], ["Customers", users.filter((user) => user.role === "customer").length], ["COD order value", `R ${codOrderValue.toLocaleString("en-ZA")}`]].map(([label, value]) => <article key={String(label)} style={panelStyle}><span style={{ color: "#aab2bd" }}>{label}</span><strong style={{ display: "block", fontSize: 28, marginTop: 8 }}>{value}</strong></article>)}
       </section>
 
       <section style={{ ...panelStyle, maxWidth: 760 }}>
@@ -194,6 +210,14 @@ export default function AdminPage() {
         <h2>Accounts and roles</h2>
         <div style={{ overflowX: "auto" }}><table style={tableStyle}><thead><tr><th>Name</th><th>Email</th><th>Role</th></tr></thead><tbody>
           {users.map((profile) => <tr key={profile.id}><td>{profile.full_name || "—"}</td><td>{profile.email}</td><td><select value={profile.role} onChange={(event) => void changeUserRole(profile.id, event.target.value as UserProfile["role"])}><option value="customer">Customer</option><option value="admin">Admin</option></select></td></tr>)}
+        </tbody></table></div>
+      </section>
+
+      <section style={panelStyle}>
+        <h2>Contact inbox</h2>
+        <div style={{ overflowX: "auto" }}><table style={tableStyle}><thead><tr><th>Received</th><th>Customer</th><th>Subject and message</th><th>Status</th></tr></thead><tbody>
+          {contacts.map((contact) => <tr key={contact.id}><td>{new Date(contact.created_at).toLocaleDateString()}</td><td>{contact.name}<br /><a href={`mailto:${contact.email}`}>{contact.email}</a>{contact.phone && <><br />{contact.phone}</>}</td><td><strong>{contact.subject}</strong><br /><span style={{ whiteSpace: "pre-wrap" }}>{contact.message}</span></td><td><select value={contact.status} onChange={(event) => void changeContactStatus(contact.id, event.target.value as ContactMessage["status"])}><option>New</option><option>In progress</option><option>Resolved</option></select></td></tr>)}
+          {contacts.length === 0 && <tr><td colSpan={4}>No messages yet.</td></tr>}
         </tbody></table></div>
       </section>
     </main>

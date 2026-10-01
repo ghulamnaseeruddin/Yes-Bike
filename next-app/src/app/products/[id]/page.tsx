@@ -1,5 +1,7 @@
 import { getProductById, getProducts } from "@/lib/products";
 import AddToCartButton from "@/components/AddToCartButton";
+import ProductReviews from "@/components/ProductReviews";
+import WishlistButton from "@/components/WishlistButton";
 import { notFound } from "next/navigation";
 
 export async function generateStaticParams() {
@@ -56,10 +58,14 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             </div>
           </div>
 
-          <AddToCartButton product={product} />
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <AddToCartButton product={product} />
+            <WishlistButton productId={product.id} />
+          </div>
           <a href="/cart" style={{ display: "inline-flex", marginTop: 12, color: "#fff", fontWeight: 700 }}>View cart</a>
         </div>
       </div>
+      <ProductReviews productId={product.id} />
     </main>
   );
 }
