@@ -18,6 +18,30 @@ export default function CartPage() {
   }, []);
 
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const quantityButtonStyle = {
+    width: 34,
+    height: 34,
+    borderRadius: 10,
+    border: "1px solid rgba(255,255,255,0.2)",
+    background: "#1f2937",
+    color: "#fff",
+    fontSize: "1.15rem",
+    fontWeight: 700,
+    cursor: "pointer",
+  } as const;
+  const quantityValueStyle = {
+    minWidth: 42,
+    height: 34,
+    padding: "0 10px",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    background: "#0f172a",
+    border: "1px solid rgba(255,255,255,0.18)",
+    borderRadius: 10,
+    color: "#fff",
+    fontWeight: 700,
+  } as const;
 
   function updateQuantity(key: string, quantity: number) {
     const updated = items
@@ -43,11 +67,11 @@ export default function CartPage() {
                 <div>
                   <h3 style={{ margin: 0 }}>{item.name}</h3>
                   <p style={{ margin: "8px 0 0", color: "rgba(255,255,255,0.7)" }}>{item.size} · {item.color}</p>
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 12 }}>
-                    <button type="button" onClick={() => updateQuantity(item.key, item.quantity - 1)} aria-label={`Remove one ${item.name}`} style={{ width: 32, height: 32 }}>−</button>
-                    <span>{item.quantity}</span>
-                    <button type="button" onClick={() => updateQuantity(item.key, item.quantity + 1)} aria-label={`Add one ${item.name}`} disabled={item.quantity >= 10} style={{ width: 32, height: 32 }}>+</button>
-                    <button type="button" onClick={() => updateQuantity(item.key, 0)} style={{ marginLeft: 8 }}>Remove</button>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 12, flexWrap: "wrap" }}>
+                    <button type="button" onClick={() => updateQuantity(item.key, item.quantity - 1)} aria-label={`Remove one ${item.name}`} style={quantityButtonStyle}>−</button>
+                    <span style={quantityValueStyle}>{item.quantity}</span>
+                    <button type="button" onClick={() => updateQuantity(item.key, item.quantity + 1)} aria-label={`Add one ${item.name}`} disabled={item.quantity >= 10} style={{ ...quantityButtonStyle, opacity: item.quantity >= 10 ? 0.5 : 1 }}>+</button>
+                    <button type="button" onClick={() => updateQuantity(item.key, 0)} style={{ marginLeft: 8, background: "#1f2937", color: "#fff", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 10, padding: "8px 12px", fontWeight: 700, cursor: "pointer" }}>Remove</button>
                   </div>
                 </div>
                 <strong style={{ color: "#facc15" }}>{`R ${(item.price * item.quantity).toLocaleString("en-ZA")}`}</strong>

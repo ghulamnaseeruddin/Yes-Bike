@@ -90,35 +90,35 @@ export default function CheckoutPage() {
           <form onSubmit={handleSubmit} style={{ background: "#111827", borderRadius: 12, padding: 24, border: "1px solid rgba(255,255,255,0.08)" }}>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
               <label style={{ display: "grid", gap: 8, gridColumn: "1 / -1" }}>
-                <span>Full name</span>
+                <span style={labelStyle}>Full name</span>
                 <input name="customer_name" required autoComplete="name" style={inputStyle} />
               </label>
               <label style={{ display: "grid", gap: 8 }}>
-                <span>Email</span>
+                <span style={labelStyle}>Email</span>
                 <input name="customer_email" type="email" required autoComplete="email" style={inputStyle} />
               </label>
               <label style={{ display: "grid", gap: 8 }}>
-                <span>Phone</span>
+                <span style={labelStyle}>Phone</span>
                 <input name="customer_phone" type="tel" required autoComplete="tel" style={inputStyle} />
               </label>
               <label style={{ display: "grid", gap: 8, gridColumn: "1 / -1" }}>
-                <span>Street address</span>
+                <span style={labelStyle}>Street address</span>
                 <input name="line1" required autoComplete="address-line1" style={inputStyle} />
               </label>
               <label style={{ display: "grid", gap: 8 }}>
-                <span>Suburb</span>
+                <span style={labelStyle}>Suburb</span>
                 <input name="suburb" required autoComplete="address-level3" style={inputStyle} />
               </label>
               <label style={{ display: "grid", gap: 8 }}>
-                <span>City</span>
+                <span style={labelStyle}>City</span>
                 <input name="city" required autoComplete="address-level2" style={inputStyle} />
               </label>
               <label style={{ display: "grid", gap: 8 }}>
-                <span>Province</span>
+                <span style={labelStyle}>Province</span>
                 <input name="province" required autoComplete="address-level1" style={inputStyle} />
               </label>
               <label style={{ display: "grid", gap: 8 }}>
-                <span>Postal code</span>
+                <span style={labelStyle}>Postal code</span>
                 <input name="postal_code" required autoComplete="postal-code" style={inputStyle} />
               </label>
             </div>
@@ -149,11 +149,16 @@ export default function CheckoutPage() {
   );
 }
 
+const labelStyle = { color: "#e5e7eb", fontWeight: 700, fontSize: "0.95rem" } as const;
+
 const inputStyle = {
   background: "#0f172a",
-  border: "1px solid rgba(255,255,255,0.15)",
+  border: "1px solid rgba(255,255,255,0.25)",
   color: "#fff",
-  borderRadius: 8,
+  borderRadius: 10,
   padding: "12px 14px",
   minWidth: 0,
+  fontSize: "1rem",
+  outline: "none",
+  boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.04)",
 };
