@@ -3,7 +3,9 @@ import axios from "axios";
 // In production, when deployed full-stack on Vercel, API is served from the same domain at /api.
 // In local dev, Vite proxy forwards /api to http://localhost:5000/api.
 // Can be overridden anytime via VITE_API_URL if an external backend is used.
-const baseURL = import.meta.env.VITE_API_URL || "/api";
+const configuredApiUrl = import.meta.env.VITE_API_URL?.trim() || "/api";
+const isLocalhostOverride = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?(?:\/.*)?$/i.test(configuredApiUrl);
+const baseURL = import.meta.env.PROD && isLocalhostOverride ? "/api" : configuredApiUrl;
 
 const api = axios.create({
   baseURL,

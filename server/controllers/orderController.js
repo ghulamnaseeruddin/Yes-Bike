@@ -10,7 +10,7 @@ const FREE_SHIPPING_THRESHOLD = 1500;
 // @route   POST /api/orders
 // @access  Private
 export const createOrder = asyncHandler(async (req, res) => {
-  const { orderItems, shippingAddress, paymentMethod } = req.body;
+  const { orderItems, shippingAddress } = req.body;
 
   if (!orderItems || orderItems.length === 0) {
     throw new ApiError(400, "No order items provided");
@@ -52,7 +52,7 @@ export const createOrder = asyncHandler(async (req, res) => {
     user: req.user._id,
     orderItems: verifiedItems,
     shippingAddress,
-    paymentMethod: paymentMethod || "Cash on Delivery",
+    deliveryMethod: "Cash on Delivery",
     subtotal,
     shippingPrice,
     totalPrice,
@@ -95,7 +95,7 @@ export const getOrders = asyncHandler(async (req, res) => {
   res.json({ success: true, data: orders });
 });
 
-// @desc    Update order status / payment status
+// @desc    Update order status
 // @route   PUT /api/orders/:id/status
 // @access  Private/Admin
 export const updateOrderStatus = asyncHandler(async (req, res) => {
@@ -103,7 +103,7 @@ export const updateOrderStatus = asyncHandler(async (req, res) => {
   if (!order) throw new ApiError(404, "Order not found");
 
   if (req.body.orderStatus) order.orderStatus = req.body.orderStatus;
-  if (req.body.paymentStatus) order.paymentStatus = req.body.paymentStatus;
+  if (req.body.deliveryMethod) order.deliveryMethod = req.body.deliveryMethod;
 
   const updated = await order.save();
   res.json({ success: true, data: updated });

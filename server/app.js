@@ -54,7 +54,7 @@ app.use(
   })
 );
 
-app.use(express.json());
+app.use(express.json({ limit: "4mb" }));
 
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));

@@ -28,7 +28,6 @@ const Checkout = () => {
     country: "South Africa",
     postalCode: "",
   });
-  const [paymentMethod] = useState("Cash on Delivery");
 
   const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
   const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FLAT_RATE;
@@ -61,7 +60,7 @@ const Checkout = () => {
           color: i.color,
         })),
         shippingAddress: form,
-        paymentMethod,
+        deliveryMethod: "Cash on Delivery",
       })
     );
   };
@@ -121,12 +120,12 @@ const Checkout = () => {
             </div>
           </div>
 
-          <h3>Payment Method</h3>
+          <h3>Delivery Method</h3>
           <div className="yb-payment-option">
             <input type="radio" checked readOnly />
             <div>
               <strong>Cash on Delivery</strong>
-              <p>Pay in cash when your order arrives. Additional payment options can be added later.</p>
+              <p>Pay in cash when your order arrives. No online payment is required.</p>
             </div>
           </div>
 

@@ -10,7 +10,7 @@ const CATEGORIES = ["Leather Suits", "Jackets", "Pants", "Helmets", "Gloves", "B
 
 const emptyForm = {
   name: "", description: "", price: "", discountPrice: "", category: CATEGORIES[0],
-  stock: "", images: "", sizes: "", colors: "", featured: false, isNew: false, isBestSeller: false,
+  stock: "", images: [], sizes: "", colors: "", featured: false, isNew: false, isBestSeller: false,
 };
 
 const AdminProducts = () => {
@@ -41,7 +41,7 @@ const AdminProducts = () => {
     setForm({
       name: p.name, description: p.description, price: p.price, discountPrice: p.discountPrice || "",
       category: p.category, stock: p.stock,
-      images: (p.images || []).join(", "), sizes: (p.sizes || []).join(", "), colors: (p.colors || []).join(", "),
+      images: p.images || [], sizes: (p.sizes || []).join(", "), colors: (p.colors || []).join(", "),
       featured: p.featured, isNew: p.isNew, isBestSeller: p.isBestSeller,
     });
     setShowModal(true);
@@ -61,7 +61,7 @@ const AdminProducts = () => {
   const handleImageChange = async (e) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) {
-      setForm((f) => ({ ...f, images: "" }));
+      setForm((f) => ({ ...f, images: [] }));
       return;
     }
 
@@ -77,7 +77,7 @@ const AdminProducts = () => {
       )
     );
 
-    setForm((f) => ({ ...f, images: dataUrls.join(", ") }));
+    setForm((f) => ({ ...f, images: dataUrls }));
   };
 
   const handleSubmit = async (e) => {
@@ -88,7 +88,7 @@ const AdminProducts = () => {
       price: Number(form.price),
       discountPrice: form.discountPrice ? Number(form.discountPrice) : null,
       stock: Number(form.stock),
-      images: form.images.split(",").map((s) => s.trim()).filter(Boolean),
+      images: form.images,
       sizes: form.sizes.split(",").map((s) => s.trim()).filter(Boolean),
       colors: form.colors.split(",").map((s) => s.trim()).filter(Boolean),
     };

@@ -6,7 +6,6 @@ import LoadingSpinner from "../../components/LoadingSpinner.jsx";
 import "./AdminProducts.css";
 
 const ORDER_STATUSES = ["Pending", "Confirmed", "Processing", "Shipped", "Delivered", "Cancelled"];
-const PAYMENT_STATUSES = ["Pending", "Paid", "Failed"];
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -40,7 +39,7 @@ const AdminOrders = () => {
         <table className="yb-table">
           <thead>
             <tr>
-              <th>Order ID</th><th>Customer</th><th>Total</th><th>Payment</th><th>Status</th><th>Date</th>
+              <th>Order ID</th><th>Customer</th><th>Total</th><th>Delivery</th><th>Status</th><th>Date</th>
             </tr>
           </thead>
           <tbody>
@@ -50,14 +49,9 @@ const AdminOrders = () => {
                 <td>{o.user?.name || "—"}<br /><span style={{ color: "var(--steel)", fontSize: "0.78rem" }}>{o.user?.email}</span></td>
                 <td>{formatCurrency(o.totalPrice)}</td>
                 <td>
-                  <select
-                    className="form-control"
-                    style={{ padding: "6px 10px", fontSize: "0.85rem" }}
-                    value={o.paymentStatus}
-                    onChange={(e) => updateStatus(o._id, "paymentStatus", e.target.value)}
-                  >
-                    {PAYMENT_STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
-                  </select>
+                  <div className="form-control" style={{ padding: "6px 10px", fontSize: "0.85rem", background: "rgba(255,255,255,0.02)" }}>
+                    {o.deliveryMethod || "Cash on Delivery"}
+                  </div>
                 </td>
                 <td>
                   <select

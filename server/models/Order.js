@@ -32,12 +32,15 @@ const orderSchema = new mongoose.Schema(
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     orderItems: [orderItemSchema],
     shippingAddress: shippingAddressSchema,
-    paymentMethod: { type: String, required: true, default: "Cash on Delivery" },
-    paymentStatus: { type: String, enum: ["Pending", "Paid", "Failed"], default: "Pending" },
     orderStatus: {
       type: String,
       enum: ["Pending", "Confirmed", "Processing", "Shipped", "Delivered", "Cancelled"],
       default: "Pending",
+    },
+    deliveryMethod: {
+      type: String,
+      default: "Cash on Delivery",
+      enum: ["Cash on Delivery"],
     },
     subtotal: { type: Number, required: true },
     shippingPrice: { type: Number, required: true, default: 0 },
