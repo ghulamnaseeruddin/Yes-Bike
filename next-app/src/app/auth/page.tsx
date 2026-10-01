@@ -85,7 +85,7 @@ export default function AuthPage() {
                 onChange={(event) => setFullName(event.target.value)}
                 type="text"
                 placeholder="Your full name"
-                style={{ padding: 12, borderRadius: 10, border: "1px solid rgba(255,255,255,0.12)", background: "#0f172a", color: "#fff" }}
+                style={inputStyle}
               />
             </label>
           )}
@@ -98,7 +98,7 @@ export default function AuthPage() {
               type="email"
               placeholder="you@example.com"
               required
-              style={{ padding: 12, borderRadius: 10, border: "1px solid rgba(255,255,255,0.12)", background: "#0f172a", color: "#fff" }}
+              style={inputStyle}
             />
           </label>
 
@@ -111,7 +111,7 @@ export default function AuthPage() {
               placeholder="••••••••"
               required
               minLength={6}
-              style={{ padding: 12, borderRadius: 10, border: "1px solid rgba(255,255,255,0.12)", background: "#0f172a", color: "#fff" }}
+              style={inputStyle}
             />
           </label>
 
@@ -137,3 +137,16 @@ export default function AuthPage() {
     </main>
   );
 }
+
+const inputStyle = {
+  width: "100%",
+  minWidth: 0,
+  padding: "12px 14px",
+  borderRadius: 10,
+  border: "1px solid rgba(255,255,255,0.25)",
+  background: "#0f172a",
+  color: "#fff",
+  fontSize: "1rem",
+  outline: "none",
+  boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.04)",
+} as const;

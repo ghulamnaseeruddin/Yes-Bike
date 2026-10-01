@@ -131,17 +131,17 @@ export default function CheckoutPage() {
             </button>
           </form>
 
-          <aside style={{ alignSelf: "start", background: "#111827", borderRadius: 12, padding: 24, border: "1px solid rgba(255,255,255,0.08)" }}>
-            <h2 style={{ marginTop: 0 }}>Order summary</h2>
+          <aside style={{ alignSelf: "start", background: "#111827", borderRadius: 12, padding: 24, border: "1px solid rgba(255,255,255,0.08)", color: "#e5e7eb" }}>
+            <h2 style={{ marginTop: 0, color: "#fff" }}>Order summary</h2>
             {items.map((item) => (
-              <div key={item.key} style={{ display: "flex", justifyContent: "space-between", gap: 16, margin: "12px 0" }}>
+              <div key={item.key} style={{ display: "flex", justifyContent: "space-between", gap: 16, margin: "12px 0", color: "#cbd5e1" }}>
                 <span>{item.name} × {item.quantity}</span>
-                <strong>{`R ${(item.price * item.quantity).toLocaleString("en-ZA")}`}</strong>
+                <strong style={{ color: "#fff" }}>{`R ${(item.price * item.quantity).toLocaleString("en-ZA")}`}</strong>
               </div>
             ))}
-            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 18 }}><span>Subtotal</span><strong>{`R ${subtotal.toLocaleString("en-ZA")}`}</strong></div>
-            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 10 }}><span>Delivery</span><strong>{`R ${shippingFee.toLocaleString("en-ZA")}`}</strong></div>
-            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 18, fontSize: "1.15rem", fontWeight: 800 }}><span>Total</span><span style={{ color: "#facc15" }}>{`R ${(subtotal + shippingFee).toLocaleString("en-ZA")}`}</span></div>
+            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 18, color: "#cbd5e1" }}><span>Subtotal</span><strong style={{ color: "#fff" }}>{`R ${subtotal.toLocaleString("en-ZA")}`}</strong></div>
+            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 10, color: "#cbd5e1" }}><span>Delivery</span><strong style={{ color: "#fff" }}>{`R ${shippingFee.toLocaleString("en-ZA")}`}</strong></div>
+            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 18, fontSize: "1.15rem", fontWeight: 800, color: "#f8fafc" }}><span>Total</span><span style={{ color: "#facc15" }}>{`R ${(subtotal + shippingFee).toLocaleString("en-ZA")}`}</span></div>
           </aside>
         </div>
       )}

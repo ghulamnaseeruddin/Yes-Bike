@@ -49,7 +49,7 @@ export default function WishlistButton({ productId, initialSaved = false }: { pr
 
   return (
     <div>
-      <button type="button" disabled={!isDatabaseProduct} onClick={() => void toggleSaved()} aria-pressed={saved} title={!isDatabaseProduct ? "Sign in and use live products to save items" : saved ? "Remove from wishlist" : "Save to wishlist"} style={{ width: 42, height: 42, border: "1px solid rgba(255,255,255,.25)", borderRadius: 6, color: saved ? "#fb7185" : "#fff", background: "transparent", cursor: "pointer" }}>
+      <button type="button" disabled={!isDatabaseProduct} onClick={() => void toggleSaved()} aria-pressed={saved} title={!isDatabaseProduct ? "Sign in and use live products to save items" : saved ? "Remove from wishlist" : "Save to wishlist"} style={{ width: 42, height: 42, border: "1px solid rgba(255,255,255,.25)", borderRadius: 10, color: saved ? "#fb7185" : "#fff", background: "#0f172a", cursor: "pointer", fontSize: "1.1rem", boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.04)" }}>
         {saved ? "♥" : "♡"}
       </button>
       {message && <p role="status" style={{ color: "#cbd5e1", fontSize: 13 }}>{message} <a href="/auth" style={{ color: "#f97316" }}>Sign in</a></p>}

@@ -56,4 +56,15 @@ export default function ProductReviews({ productId }: { productId: string }) {
   );
 }
 
-const inputStyle = { width: "100%", minWidth: 0, padding: 10, color: "#fff", background: "#0f172a", border: "1px solid rgba(255,255,255,.18)", borderRadius: 6 };
+const inputStyle = {
+  width: "100%",
+  minWidth: 0,
+  padding: "11px 12px",
+  color: "#fff",
+  background: "#0f172a",
+  border: "1px solid rgba(255,255,255,0.25)",
+  borderRadius: 10,
+  fontSize: "1rem",
+  outline: "none",
+  boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.04)",
+};
