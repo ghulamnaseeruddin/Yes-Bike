@@ -90,35 +90,35 @@ export default function CheckoutPage() {
           <form onSubmit={handleSubmit} style={{ background: "#111827", borderRadius: 12, padding: 24, border: "1px solid rgba(255,255,255,0.08)" }}>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
               <label style={{ display: "grid", gap: 8, gridColumn: "1 / -1" }}>
-                <span style={labelStyle}>Full name</span>
+                <span>Full name</span>
                 <input name="customer_name" required autoComplete="name" style={inputStyle} />
               </label>
               <label style={{ display: "grid", gap: 8 }}>
-                <span style={labelStyle}>Email</span>
+                <span>Email</span>
                 <input name="customer_email" type="email" required autoComplete="email" style={inputStyle} />
               </label>
               <label style={{ display: "grid", gap: 8 }}>
-                <span style={labelStyle}>Phone</span>
+                <span>Phone</span>
                 <input name="customer_phone" type="tel" required autoComplete="tel" style={inputStyle} />
               </label>
               <label style={{ display: "grid", gap: 8, gridColumn: "1 / -1" }}>
-                <span style={labelStyle}>Street address</span>
+                <span>Street address</span>
                 <input name="line1" required autoComplete="address-line1" style={inputStyle} />
               </label>
               <label style={{ display: "grid", gap: 8 }}>
-                <span style={labelStyle}>Suburb</span>
+                <span>Suburb</span>
                 <input name="suburb" required autoComplete="address-level3" style={inputStyle} />
               </label>
               <label style={{ display: "grid", gap: 8 }}>
-                <span style={labelStyle}>City</span>
+                <span>City</span>
                 <input name="city" required autoComplete="address-level2" style={inputStyle} />
               </label>
               <label style={{ display: "grid", gap: 8 }}>
-                <span style={labelStyle}>Province</span>
+                <span>Province</span>
                 <input name="province" required autoComplete="address-level1" style={inputStyle} />
               </label>
               <label style={{ display: "grid", gap: 8 }}>
-                <span style={labelStyle}>Postal code</span>
+                <span>Postal code</span>
                 <input name="postal_code" required autoComplete="postal-code" style={inputStyle} />
               </label>
             </div>
@@ -131,17 +131,17 @@ export default function CheckoutPage() {
             </button>
           </form>
 
-          <aside style={{ alignSelf: "start", background: "#111827", borderRadius: 12, padding: 24, border: "1px solid rgba(255,255,255,0.08)", color: "#e5e7eb" }}>
-            <h2 style={{ marginTop: 0, color: "#fff" }}>Order summary</h2>
+          <aside style={{ alignSelf: "start", background: "#111827", borderRadius: 12, padding: 24, border: "1px solid rgba(255,255,255,0.08)" }}>
+            <h2 style={{ marginTop: 0 }}>Order summary</h2>
             {items.map((item) => (
-              <div key={item.key} style={{ display: "flex", justifyContent: "space-between", gap: 16, margin: "12px 0", color: "#cbd5e1" }}>
+              <div key={item.key} style={{ display: "flex", justifyContent: "space-between", gap: 16, margin: "12px 0" }}>
                 <span>{item.name} × {item.quantity}</span>
-                <strong style={{ color: "#fff" }}>{`R ${(item.price * item.quantity).toLocaleString("en-ZA")}`}</strong>
+                <strong>{`R ${(item.price * item.quantity).toLocaleString("en-ZA")}`}</strong>
               </div>
             ))}
-            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 18, color: "#cbd5e1" }}><span>Subtotal</span><strong style={{ color: "#fff" }}>{`R ${subtotal.toLocaleString("en-ZA")}`}</strong></div>
-            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 10, color: "#cbd5e1" }}><span>Delivery</span><strong style={{ color: "#fff" }}>{`R ${shippingFee.toLocaleString("en-ZA")}`}</strong></div>
-            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 18, fontSize: "1.15rem", fontWeight: 800, color: "#f8fafc" }}><span>Total</span><span style={{ color: "#facc15" }}>{`R ${(subtotal + shippingFee).toLocaleString("en-ZA")}`}</span></div>
+            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 18 }}><span>Subtotal</span><strong>{`R ${subtotal.toLocaleString("en-ZA")}`}</strong></div>
+            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 10 }}><span>Delivery</span><strong>{`R ${shippingFee.toLocaleString("en-ZA")}`}</strong></div>
+            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 18, fontSize: "1.15rem", fontWeight: 800 }}><span>Total</span><span style={{ color: "#facc15" }}>{`R ${(subtotal + shippingFee).toLocaleString("en-ZA")}`}</span></div>
           </aside>
         </div>
       )}
@@ -149,16 +149,11 @@ export default function CheckoutPage() {
   );
 }
 
-const labelStyle = { color: "#e5e7eb", fontWeight: 700, fontSize: "0.95rem" } as const;
-
 const inputStyle = {
   background: "#0f172a",
-  border: "1px solid rgba(255,255,255,0.25)",
+  border: "1px solid rgba(255,255,255,0.15)",
   color: "#fff",
-  borderRadius: 10,
+  borderRadius: 8,
   padding: "12px 14px",
   minWidth: 0,
-  fontSize: "1rem",
-  outline: "none",
-  boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.04)",
 };

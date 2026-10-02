@@ -30,35 +30,35 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
         <div style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 28, padding: 28 }}>
           <p style={{ color: "#fbcfe8", fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12 }}>{product.category}</p>
-          <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", marginBottom: 18, color: "#fff" }}>{product.name}</h1>
-          <p style={{ color: "#e2e8f0", lineHeight: 1.7, marginBottom: 20 }}>{product.description}</p>
+          <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", marginBottom: 18 }}>{product.name}</h1>
+          <p style={{ color: "rgba(255,255,255,0.78)", lineHeight: 1.7, marginBottom: 20 }}>{product.description}</p>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
             <span style={{ fontSize: "2rem", fontWeight: 800, color: "#facc15" }}>{`R ${Number(product.price).toLocaleString("en-ZA")}`}</span>
             {product.discountPrice && (
-              <span style={{ color: "#cbd5e1", textDecoration: "line-through" }}>{`R ${Number(product.discountPrice).toLocaleString("en-ZA")}`}</span>
+              <span style={{ color: "rgba(255,255,255,0.6)", textDecoration: "line-through" }}>{`R ${Number(product.discountPrice).toLocaleString("en-ZA")}`}</span>
             )}
           </div>
 
           <div style={{ marginBottom: 18 }}>
-            <p style={{ marginBottom: 8, fontWeight: 700, color: "#f8fafc" }}>Available sizes</p>
+            <p style={{ marginBottom: 8, fontWeight: 700 }}>Available sizes</p>
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               {product.sizes.map((size) => (
-                <span key={size} style={{ padding: "8px 12px", borderRadius: 999, border: "1px solid rgba(255,255,255,0.2)", color: "#fff", background: "rgba(15,23,42,0.72)" }}>{size}</span>
+                <span key={size} style={{ padding: "8px 12px", borderRadius: 999, border: "1px solid rgba(255,255,255,0.2)", color: "#fff" }}>{size}</span>
               ))}
             </div>
           </div>
 
           <div style={{ marginBottom: 18 }}>
-            <p style={{ marginBottom: 8, fontWeight: 700, color: "#f8fafc" }}>Available colors</p>
+            <p style={{ marginBottom: 8, fontWeight: 700 }}>Available colors</p>
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               {product.colors.map((color) => (
-                <span key={color} style={{ padding: "8px 12px", borderRadius: 999, border: "1px solid rgba(255,255,255,0.2)", color: "#fff", background: "rgba(15,23,42,0.72)" }}>{color}</span>
+                <span key={color} style={{ padding: "8px 12px", borderRadius: 999, border: "1px solid rgba(255,255,255,0.2)", color: "#fff" }}>{color}</span>
               ))}
             </div>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <AddToCartButton product={product} />
             <WishlistButton productId={product.id} />
           </div>

@@ -5,8 +5,10 @@
 1. Create a Supabase project.
 2. In the SQL Editor, run `supabase/schema.sql`.
 3. Run `supabase/demo-products.sql` to add 100 illustrative demo products and their image URLs.
-4. Set Authentication's site URL and allowed redirects to include localhost and the Vercel domain.
+4. Set Authentication's site URL and allowed redirects to include `http://localhost:3000/auth/callback` and `https://<your-vercel-domain>/auth/callback`.
 5. Copy the project URL and anon/publishable key. Never put a service-role key in client variables.
+
+For Google login, enable the Google provider under Supabase Authentication → Sign In / Providers. Add the Supabase callback URL shown there (usually `https://<project-ref>.supabase.co/auth/v1/callback`) to the OAuth client in Google Cloud, then add the local and deployed `/auth/callback` URLs to Supabase's redirect allowlist.
 
 To promote the first administrator, register that account at `/auth` and then run this in the SQL Editor with its email:
 
@@ -42,6 +44,6 @@ Then run `npm run dev` and open `http://localhost:3000`.
 2. Set Vercel **Root Directory** to `next-app`.
 3. Use the detected Next.js preset and default `npm run build` command. Do not choose the Services preset.
 4. Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in Vercel for Production and Preview. Optionally add server-only `GROQ_API_KEY` and `GROQ_MODEL` for AI suggestions.
-5. Deploy and smoke-test storefront, auth, cart, COD checkout, profile, order history, contact, wishlist, and admin flows.
+5. Deploy and smoke-test storefront, email signup/login, Google login, password visibility, cart, COD checkout, profile, order history, contact, wishlist, and admin flows.
 
 Demo browsing works without Supabase. Auth, contact storage, wishlist, reviews, admin, and persisted orders require the SQL schema and valid environment variables. Verify RLS, stock validation, and abuse controls before accepting real orders. No online payments are configured.

@@ -68,27 +68,27 @@ export default function ProfilePage() {
 
   return (
     <main style={{ maxWidth: 760, margin: "0 auto", padding: "48px 20px 80px" }}>
-      <h1 style={{ color: "#fff", marginBottom: 18 }}>Profile</h1>
-      {loading ? <p style={{ color: "#e5e7eb" }}>Loading profile...</p> : profile ? (
+      <h1>Profile</h1>
+      {loading ? <p>Loading profile...</p> : profile ? (
         <form onSubmit={saveProfile} style={panelStyle}>
-          <p style={{ color: "#cbd5e1" }}>Account: {profile.email}</p>
+          <p style={{ color: "#aab2bd" }}>Account: {profile.email}</p>
           <label style={labelStyle}>Full name
             <input autoComplete="name" value={fullName} onChange={(event) => setFullName(event.target.value)} style={inputStyle} />
           </label>
           <label style={labelStyle}>Phone
             <input autoComplete="tel" type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} style={inputStyle} />
           </label>
-          <p style={{ color: "#e5e7eb" }}>Account type: {profile.role}</p>
+          <p>Account type: {profile.role}</p>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
             <button disabled={saving} style={primaryButton}>{saving ? "Saving..." : "Save profile"}</button>
             <button type="button" onClick={signOut} style={secondaryButton}>Sign out</button>
           </div>
-          {message && <p role="status" style={{ color: "#f8fafc" }}>{message}</p>}
+          {message && <p role="status">{message}</p>}
         </form>
       ) : (
         <section style={panelStyle}>
-          <p style={{ color: "#e5e7eb" }}>{message || "This account profile is not available. Try signing out and back in."}</p>
-          <a href="/auth" style={{ color: "#f97316" }}>Sign in or register</a>
+          <p>{message || "This account profile is not available. Try signing out and back in."}</p>
+          <a href="/login" style={{ color: "#f97316" }}>Sign in or register</a>
         </section>
       )}
     </main>
@@ -96,18 +96,7 @@ export default function ProfilePage() {
 }
 
 const panelStyle = { display: "grid", gap: 18, background: "#111827", border: "1px solid rgba(255,255,255,.1)", borderRadius: 10, padding: 24 };
-const labelStyle = { display: "grid", gap: 8, color: "#e5e7eb", fontWeight: 600 };
-const inputStyle = {
-  width: "100%",
-  minWidth: 0,
-  padding: "12px 14px",
-  color: "#fff",
-  background: "#0f172a",
-  border: "1px solid rgba(255,255,255,0.25)",
-  borderRadius: 10,
-  fontSize: "1rem",
-  outline: "none",
-  boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.04)",
-};
+const labelStyle = { display: "grid", gap: 8 };
+const inputStyle = { width: "100%", minWidth: 0, padding: 12, color: "#fff", background: "#0f172a", border: "1px solid rgba(255,255,255,.18)", borderRadius: 6 };
 const primaryButton = { padding: "11px 16px", color: "#fff", background: "#f97316", border: 0, borderRadius: 6, fontWeight: 700, cursor: "pointer" };
 const secondaryButton = { padding: "11px 16px", color: "#fff", background: "transparent", border: "1px solid rgba(255,255,255,.2)", borderRadius: 6, cursor: "pointer" };

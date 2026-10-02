@@ -59,16 +59,5 @@ export default function ShopExplorer({ products, categories, initialCategory = "
   );
 }
 
-const labelStyle = { display: "grid", gap: 6, color: "#e5e7eb", fontSize: 14, fontWeight: 600 };
-const inputStyle = {
-  width: "100%",
-  minWidth: 0,
-  padding: "12px 14px",
-  color: "#fff",
-  background: "#111827",
-  border: "1px solid rgba(255,255,255,0.25)",
-  borderRadius: 10,
-  fontSize: "1rem",
-  outline: "none",
-  boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.04)",
-};
+const labelStyle = { display: "grid", gap: 6, color: "#cbd5e1", fontSize: 14 };
+const inputStyle = { width: "100%", minWidth: 0, padding: 11, color: "#fff", background: "#111827", border: "1px solid rgba(255,255,255,.2)", borderRadius: 6 };

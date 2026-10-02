@@ -1,0 +1,82 @@
+.authShell {
+  width: 100%;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 48px 20px;
+  background: #f4f6f3;
+  color: #202622;
+  font-family: var(--font-geist-sans), sans-serif;
+}
+
+.authPanel {
+  width: min(100%, 440px);
+  padding: 12px 4px;
+}
+
+.authBrand {
+  display: inline-flex;
+  gap: 5px;
+  margin-bottom: 38px;
+  color: #202622;
+  font-size: 19px;
+  font-weight: 850;
+  letter-spacing: .04em;
+}
+
+.authBrand span { color: #d65a32; }
+.authEyebrow { margin-bottom: 10px; color: #8a938d; font-size: 11px; font-weight: 750; letter-spacing: .12em; }
+.authPanel h1 { margin: 0; color: #202622; font-size: clamp(28px, 5vw, 34px); font-weight: 700; line-height: 1.2; }
+.authIntro { margin: 10px 0 26px; color: #68716b; font-size: 14px; line-height: 1.65; }
+
+.googleButton {
+  width: 100%;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  border: 1px solid #d9ded9;
+  border-radius: 7px;
+  background: #fff;
+  color: #28302a;
+  font-size: 14px;
+  font-weight: 650;
+  cursor: pointer;
+}
+.googleButton:hover:not(:disabled) { background: #fafbf9; border-color: #bfc8c0; }
+.googleButton:disabled { opacity: .65; cursor: wait; }
+
+.authDivider { display: flex; align-items: center; gap: 13px; margin: 22px 0; color: #929b94; font-size: 12px; }
+.authDivider::before, .authDivider::after { content: ""; height: 1px; flex: 1; background: #e1e5e0; }
+.authForm { display: grid; gap: 17px; }
+.authField { display: grid; gap: 7px; color: #39423b; font-size: 13px; font-weight: 650; }
+.authField > input, .passwordControl input {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 12px;
+  border: 1px solid #d9ded9;
+  border-radius: 6px;
+  background: #fff;
+  color: #202622;
+  font-size: 14px;
+  font-weight: 400;
+}
+.authField input::placeholder { color: #a0a9a1; }
+.authField input:focus { outline: 2px solid rgba(214,90,50,.2); border-color: #d65a32; }
+.passwordControl { position: relative; display: flex; }
+.passwordControl input { padding-right: 58px; }
+.passwordToggle { position: absolute; top: 0; right: 10px; height: 100%; border: 0; background: transparent; color: #68716b; font-size: 12px; font-weight: 650; cursor: pointer; }
+.passwordToggle:hover { color: #b84522; }
+.authStatus { margin: -2px 0 0; color: #a3332a; font-size: 13px; line-height: 1.5; }
+.primaryAuthButton { min-height: 48px; margin-top: 2px; border: 0; border-radius: 6px; background: #d65a32; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; }
+.primaryAuthButton:hover:not(:disabled) { background: #bd4825; }
+.primaryAuthButton:disabled { opacity: .65; cursor: wait; }
+.authSwitch { margin: 23px 0 0; color: #68716b; text-align: center; font-size: 13px; }
+.authSwitch a { color: #b84522; font-weight: 700; }
+.authTerms { margin: 24px 0 0; color: #9aa29c; text-align: center; font-size: 11px; line-height: 1.5; }
+
+@media (max-width: 480px) {
+  .authShell { align-items: start; padding-top: 34px; }
+  .authBrand { margin-bottom: 30px; }
+}

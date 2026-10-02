@@ -1,4 +1,4 @@
-import { createSupabaseServerClient } from "@/lib/supabase-server";
+import { createClient } from "@supabase/supabase-js";
 import { demoProducts } from "@/lib/demo-data";
 
 export type ProductRecord = {
@@ -30,7 +30,10 @@ export async function getProducts(): Promise<ProductRecord[]> {
   }
 
   try {
-    const supabase = await createSupabaseServerClient();
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
     const { data, error } = await supabase
       .from("products")
       .select("*")

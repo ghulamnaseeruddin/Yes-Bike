@@ -64,34 +64,27 @@ export default function OrdersPage() {
 
   return (
     <main style={{ maxWidth: 1000, margin: "0 auto", padding: "48px 20px 80px" }}>
-      <h1 style={{ color: "#fff", marginBottom: 20 }}>Your orders</h1>
-      {loading ? <p style={{ color: "#e5e7eb" }}>Loading orders...</p> : message ? (
-        <section style={panelStyle}><p style={{ color: "#e5e7eb" }}>{message}</p><a href="/auth" style={{ color: "#f97316" }}>Sign in</a></section>
+      <h1>Your orders</h1>
+      {loading ? <p>Loading orders...</p> : message ? (
+        <section style={panelStyle}><p>{message}</p><a href="/login" style={{ color: "#f97316" }}>Sign in</a></section>
       ) : orders.length === 0 ? (
-        <section style={panelStyle}><p style={{ color: "#e5e7eb" }}>No orders yet.</p><a href="/shop" style={{ color: "#f97316" }}>Browse the shop</a></section>
+        <section style={panelStyle}><p>No orders yet.</p><a href="/shop" style={{ color: "#f97316" }}>Browse the shop</a></section>
       ) : (
         <div style={{ display: "grid", gap: 16 }}>
           {orders.map((order) => (
             <article key={order.id} style={panelStyle}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", gap: 16, flexWrap: "wrap" }}>
-                <div>
-                  <h2 style={{ margin: 0, color: "#fff" }}>Order {order.id.slice(0, 8).toUpperCase()}</h2>
-                  <p style={{ color: "#cbd5e1", marginTop: 6 }}>{new Date(order.created_at).toLocaleString()}</p>
-                </div>
-                <strong style={{ color: "#facc15" }}>{order.order_status}</strong>
+                <div><h2 style={{ margin: 0 }}>Order {order.id.slice(0, 8).toUpperCase()}</h2><p style={{ color: "#aab2bd" }}>{new Date(order.created_at).toLocaleString()}</p></div>
+                <strong>{order.order_status}</strong>
               </div>
-              <ul style={{ paddingLeft: 20, lineHeight: 1.8, color: "#e5e7eb", marginTop: 16 }}>
+              <ul style={{ paddingLeft: 20, lineHeight: 1.8 }}>
                 {(itemsByOrder[order.id] ?? []).map((item, index) => (
-                  <li key={`${order.id}-${index}`}>
-                    <span style={{ color: "#f8fafc" }}>{item.product_name}</span> × {item.quantity}
-                    {item.size ? ` · ${item.size}` : ""}
-                    {item.color ? ` · ${item.color}` : ""}
-                  </li>
+                  <li key={`${order.id}-${index}`}>{item.product_name} × {item.quantity}{item.size ? ` · ${item.size}` : ""}{item.color ? ` · ${item.color}` : ""}</li>
                 ))}
               </ul>
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", borderTop: "1px solid rgba(255,255,255,.1)", paddingTop: 14, color: "#e5e7eb" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", borderTop: "1px solid rgba(255,255,255,.1)", paddingTop: 14 }}>
                 <span>{order.delivery_method}</span>
-                <strong style={{ color: "#fff" }}>{`R ${Number(order.total_price).toLocaleString("en-ZA")}`}</strong>
+                <strong>{`R ${Number(order.total_price).toLocaleString("en-ZA")}`}</strong>
               </div>
             </article>
           ))}
@@ -101,4 +94,4 @@ export default function OrdersPage() {
   );
 }
 
-const panelStyle = { background: "#111827", border: "1px solid rgba(255,255,255,.1)", borderRadius: 10, padding: 22, color: "#e5e7eb" };
+const panelStyle = { background: "#111827", border: "1px solid rgba(255,255,255,.1)", borderRadius: 10, padding: 22 };

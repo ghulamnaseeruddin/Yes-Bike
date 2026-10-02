@@ -12,6 +12,8 @@ npm run dev
 
 Open `http://localhost:3000`. Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` to `.env.local` for live auth and database access. Without credentials, the storefront uses 100 demo products with Unsplash photos; authentication and order persistence are unavailable.
 
+Login is at `/login` and registration at `/signup`. Email/password and Google OAuth use Supabase Auth. To enable Google sign-in, configure the Google provider in Supabase and add `/auth/callback` on localhost and the deployed domain to Supabase's allowed redirect URLs.
+
 The shop includes an optional authenticated gear advisor using Groq. Add a server-only `GROQ_API_KEY` to enable conversational suggestions; normal search remains available without it. The default model is `openai/gpt-oss-20b`, subject to Groq account quotas and rate limits.
 
 ## Supabase

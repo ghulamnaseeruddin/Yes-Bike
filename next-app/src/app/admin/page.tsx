@@ -15,18 +15,7 @@ type ProductDraft = { name: string; description: string; price: string; discount
 
 const emptyDraft: ProductDraft = { name: "", description: "", price: "", discountPrice: "", category: "", stock: "0", image: "", sizes: "", colors: "", featured: false };
 const statuses = ["Pending", "Confirmed", "Processing", "Shipped", "Delivered", "Cancelled"];
-const inputStyle = {
-  width: "100%",
-  minWidth: 0,
-  padding: "11px 12px",
-  color: "#fff",
-  background: "#0f172a",
-  border: "1px solid rgba(255,255,255,0.25)",
-  borderRadius: 10,
-  fontSize: "1rem",
-  outline: "none",
-  boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.04)",
-};
+const inputStyle = { width: "100%", minWidth: 0, padding: 10, color: "#fff", background: "#0f172a", border: "1px solid rgba(255,255,255,.18)", borderRadius: 6 };
 const panelStyle = { background: "#111827", border: "1px solid rgba(255,255,255,.1)", borderRadius: 10, padding: 20 };
 
 export default function AdminPage() {
@@ -173,7 +162,7 @@ export default function AdminPage() {
     .reduce((total, order) => total + Number(order.total_price), 0);
 
   if (loading) return <main style={{ maxWidth: 1200, margin: "0 auto", padding: 32 }}><p>Loading admin workspace...</p></main>;
-  if (!authorized) return <main style={{ maxWidth: 720, margin: "0 auto", padding: "48px 20px" }}><section style={panelStyle}><h1>Admin access</h1><p>{message}</p><a href="/auth" style={{ color: "#f97316" }}>Sign in</a></section></main>;
+  if (!authorized) return <main style={{ maxWidth: 720, margin: "0 auto", padding: "48px 20px" }}><section style={panelStyle}><h1>Admin access</h1><p>{message}</p><a href="/login" style={{ color: "#f97316" }}>Sign in</a></section></main>;
 
   return (
     <main style={{ maxWidth: 1200, margin: "0 auto", padding: "40px 20px 80px", display: "grid", gap: 28 }}>
@@ -184,7 +173,7 @@ export default function AdminPage() {
       </section>
 
       <section style={{ ...panelStyle, maxWidth: 760 }}>
-        <h2 style={{ color: "#fff" }}>{editingId ? "Edit product" : "Add product"}</h2>
+        <h2>{editingId ? "Edit product" : "Add product"}</h2>
         <form onSubmit={saveProduct} style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 12 }}>
           <input required placeholder="Product name" value={draft.name} onChange={(event) => setDraft({ ...draft, name: event.target.value })} style={inputStyle} />
           <input required placeholder="Category" value={draft.category} onChange={(event) => setDraft({ ...draft, category: event.target.value })} style={inputStyle} />
@@ -194,41 +183,41 @@ export default function AdminPage() {
           <input placeholder="Image URL" value={draft.image} onChange={(event) => setDraft({ ...draft, image: event.target.value })} style={inputStyle} />
           <input placeholder="Sizes, comma separated" value={draft.sizes} onChange={(event) => setDraft({ ...draft, sizes: event.target.value })} style={inputStyle} />
           <input placeholder="Colors, comma separated" value={draft.colors} onChange={(event) => setDraft({ ...draft, colors: event.target.value })} style={inputStyle} />
-          <textarea placeholder="Description" value={draft.description} onChange={(event) => setDraft({ ...draft, description: event.target.value })} style={{ ...inputStyle, gridColumn: "1 / -1", minHeight: 90, resize: "vertical" }} />
-          <label style={{ display: "flex", gap: 8, alignItems: "center", color: "#e5e7eb" }}><input type="checkbox" checked={draft.featured} onChange={(event) => setDraft({ ...draft, featured: event.target.checked })} /> Featured</label>
+          <textarea placeholder="Description" value={draft.description} onChange={(event) => setDraft({ ...draft, description: event.target.value })} style={{ ...inputStyle, gridColumn: "1 / -1", minHeight: 90 }} />
+          <label style={{ display: "flex", gap: 8, alignItems: "center" }}><input type="checkbox" checked={draft.featured} onChange={(event) => setDraft({ ...draft, featured: event.target.checked })} /> Featured</label>
           <div style={{ display: "flex", gap: 8, gridColumn: "1 / -1" }}>
             <button disabled={saving} style={{ padding: "10px 16px", background: "#f97316", color: "#fff", border: 0, borderRadius: 6, fontWeight: 700 }}>{saving ? "Saving..." : editingId ? "Save changes" : "Create product"}</button>
-            {editingId && <button type="button" onClick={() => { setEditingId(""); setDraft(emptyDraft); }} style={{ padding: "10px 16px", background: "#1f2937", color: "#fff", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 6, cursor: "pointer" }}>Cancel edit</button>}
+            {editingId && <button type="button" onClick={() => { setEditingId(""); setDraft(emptyDraft); }} style={{ padding: "10px 16px" }}>Cancel edit</button>}
           </div>
         </form>
       </section>
 
       <section style={panelStyle}>
-        <h2 style={{ color: "#fff" }}>Products</h2>
-        <div style={{ overflowX: "auto" }}><table style={tableStyle}><thead><tr><th style={{ color: "#e5e7eb" }}>Name</th><th style={{ color: "#e5e7eb" }}>Category</th><th style={{ color: "#e5e7eb" }}>Price</th><th style={{ color: "#e5e7eb" }}>Stock</th><th style={{ color: "#e5e7eb" }}>Actions</th></tr></thead><tbody>
-          {products.map((product) => <tr key={product.id}><td style={{ color: "#f8fafc" }}>{product.name}</td><td style={{ color: "#cbd5e1" }}>{product.category}</td><td style={{ color: "#f8fafc" }}>{`R ${Number(product.price).toLocaleString("en-ZA")}`}</td><td style={{ color: "#cbd5e1" }}>{product.stock}</td><td><button type="button" onClick={() => beginEdit(product)} style={{ background: "#1f2937", color: "#fff", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 6, padding: "6px 10px", cursor: "pointer" }}>Edit</button> <button type="button" onClick={() => void deleteProduct(product)} style={{ background: "#0f172a", color: "#fff", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 6, padding: "6px 10px", cursor: "pointer" }}>Delete</button></td></tr>)}
+        <h2>Products</h2>
+        <div style={{ overflowX: "auto" }}><table style={tableStyle}><thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Actions</th></tr></thead><tbody>
+          {products.map((product) => <tr key={product.id}><td>{product.name}</td><td>{product.category}</td><td>{`R ${Number(product.price).toLocaleString("en-ZA")}`}</td><td>{product.stock}</td><td><button type="button" onClick={() => beginEdit(product)}>Edit</button> <button type="button" onClick={() => void deleteProduct(product)}>Delete</button></td></tr>)}
         </tbody></table></div>
       </section>
 
       <section style={panelStyle}>
-        <h2 style={{ color: "#fff" }}>Orders</h2>
-        <div style={{ overflowX: "auto" }}><table style={tableStyle}><thead><tr><th style={{ color: "#e5e7eb" }}>Order</th><th style={{ color: "#e5e7eb" }}>Customer</th><th style={{ color: "#e5e7eb" }}>Contact</th><th style={{ color: "#e5e7eb" }}>Total</th><th style={{ color: "#e5e7eb" }}>Status</th></tr></thead><tbody>
-          {orders.map((order) => <tr key={order.id}><td style={{ color: "#f8fafc" }}>{order.id.slice(0, 8).toUpperCase()}<br /><small style={{ color: "#cbd5e1" }}>{new Date(order.created_at).toLocaleDateString()}</small></td><td style={{ color: "#f8fafc" }}>{order.customer_name}</td><td style={{ color: "#cbd5e1" }}>{order.customer_email}<br />{order.customer_phone}</td><td style={{ color: "#f8fafc" }}>{`R ${Number(order.total_price).toLocaleString("en-ZA")}`}</td><td><select value={order.order_status} onChange={(event) => void changeOrderStatus(order.id, event.target.value)} style={{ background: "#0f172a", color: "#fff", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 6, padding: "8px 10px" }}>{statuses.map((status) => <option key={status}>{status}</option>)}</select></td></tr>)}
+        <h2>Orders</h2>
+        <div style={{ overflowX: "auto" }}><table style={tableStyle}><thead><tr><th>Order</th><th>Customer</th><th>Contact</th><th>Total</th><th>Status</th></tr></thead><tbody>
+          {orders.map((order) => <tr key={order.id}><td>{order.id.slice(0, 8).toUpperCase()}<br /><small>{new Date(order.created_at).toLocaleDateString()}</small></td><td>{order.customer_name}</td><td>{order.customer_email}<br />{order.customer_phone}</td><td>{`R ${Number(order.total_price).toLocaleString("en-ZA")}`}</td><td><select value={order.order_status} onChange={(event) => void changeOrderStatus(order.id, event.target.value)}>{statuses.map((status) => <option key={status}>{status}</option>)}</select></td></tr>)}
         </tbody></table></div>
       </section>
 
       <section style={panelStyle}>
-        <h2 style={{ color: "#fff" }}>Accounts and roles</h2>
-        <div style={{ overflowX: "auto" }}><table style={tableStyle}><thead><tr><th style={{ color: "#e5e7eb" }}>Name</th><th style={{ color: "#e5e7eb" }}>Email</th><th style={{ color: "#e5e7eb" }}>Role</th></tr></thead><tbody>
-          {users.map((profile) => <tr key={profile.id}><td style={{ color: "#f8fafc" }}>{profile.full_name || "—"}</td><td style={{ color: "#cbd5e1" }}>{profile.email}</td><td><select value={profile.role} onChange={(event) => void changeUserRole(profile.id, event.target.value as UserProfile["role"])} style={{ background: "#0f172a", color: "#fff", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 6, padding: "8px 10px" }}><option value="customer">Customer</option><option value="admin">Admin</option></select></td></tr>)}
+        <h2>Accounts and roles</h2>
+        <div style={{ overflowX: "auto" }}><table style={tableStyle}><thead><tr><th>Name</th><th>Email</th><th>Role</th></tr></thead><tbody>
+          {users.map((profile) => <tr key={profile.id}><td>{profile.full_name || "—"}</td><td>{profile.email}</td><td><select value={profile.role} onChange={(event) => void changeUserRole(profile.id, event.target.value as UserProfile["role"])}><option value="customer">Customer</option><option value="admin">Admin</option></select></td></tr>)}
         </tbody></table></div>
       </section>
 
       <section style={panelStyle}>
-        <h2 style={{ color: "#fff" }}>Contact inbox</h2>
-        <div style={{ overflowX: "auto" }}><table style={tableStyle}><thead><tr><th style={{ color: "#e5e7eb" }}>Received</th><th style={{ color: "#e5e7eb" }}>Customer</th><th style={{ color: "#e5e7eb" }}>Subject and message</th><th style={{ color: "#e5e7eb" }}>Status</th></tr></thead><tbody>
-          {contacts.map((contact) => <tr key={contact.id}><td style={{ color: "#cbd5e1" }}>{new Date(contact.created_at).toLocaleDateString()}</td><td style={{ color: "#cbd5e1" }}>{contact.name}<br /><a href={`mailto:${contact.email}`} style={{ color: "#f9a8d4" }}>{contact.email}</a>{contact.phone && <><br />{contact.phone}</>}</td><td><strong style={{ color: "#fff" }}>{contact.subject}</strong><br /><span style={{ whiteSpace: "pre-wrap", color: "#cbd5e1" }}>{contact.message}</span></td><td><select value={contact.status} onChange={(event) => void changeContactStatus(contact.id, event.target.value as ContactMessage["status"])} style={{ background: "#0f172a", color: "#fff", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 6, padding: "8px 10px" }}><option>New</option><option>In progress</option><option>Resolved</option></select></td></tr>)}
-          {contacts.length === 0 && <tr><td colSpan={4} style={{ color: "#cbd5e1" }}>No messages yet.</td></tr>}
+        <h2>Contact inbox</h2>
+        <div style={{ overflowX: "auto" }}><table style={tableStyle}><thead><tr><th>Received</th><th>Customer</th><th>Subject and message</th><th>Status</th></tr></thead><tbody>
+          {contacts.map((contact) => <tr key={contact.id}><td>{new Date(contact.created_at).toLocaleDateString()}</td><td>{contact.name}<br /><a href={`mailto:${contact.email}`}>{contact.email}</a>{contact.phone && <><br />{contact.phone}</>}</td><td><strong>{contact.subject}</strong><br /><span style={{ whiteSpace: "pre-wrap" }}>{contact.message}</span></td><td><select value={contact.status} onChange={(event) => void changeContactStatus(contact.id, event.target.value as ContactMessage["status"])}><option>New</option><option>In progress</option><option>Resolved</option></select></td></tr>)}
+          {contacts.length === 0 && <tr><td colSpan={4}>No messages yet.</td></tr>}
         </tbody></table></div>
       </section>
     </main>
