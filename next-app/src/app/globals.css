@@ -1,18 +1,15 @@
 :root {
-  --background: #0b1020;
-  --foreground: #f8fafc;
-  --muted: #dbe3f0;
-  --soft: rgba(255, 255, 255, 0.72);
-  --surface: #111827;
-  --surface-strong: #0f172a;
-  --border: rgba(255, 255, 255, 0.14);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0b1020;
-    --foreground: #f8fafc;
-  }
+  color-scheme: light;
+  --background: #f4f6f3;
+  --foreground: #202622;
+  --muted: #68716b;
+  --soft: #566159;
+  --surface: #ffffff;
+  --surface-subtle: #f8faf7;
+  --border: #e1e6e0;
+  --accent: #d65a32;
+  --accent-hover: #bd4825;
+  --highlight: #9a6b08;
 }
 
 html {
@@ -31,7 +28,7 @@ body {
   flex-direction: column;
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
@@ -72,9 +69,36 @@ select {
   font: inherit;
 }
 
+button:not(.googleButton):not(.passwordToggle):not(.primaryAuthButton) {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--foreground);
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+input,
+textarea,
+select {
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--foreground);
+}
+
+th,
+td {
+  padding: 11px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
 input::placeholder,
 textarea::placeholder {
-  color: rgba(255, 255, 255, 0.6);
+  color: #89938b;
 }
 
 input:focus,
@@ -82,12 +106,67 @@ textarea:focus,
 select:focus,
 button:focus-visible,
 a:focus-visible {
-  outline: 2px solid rgba(249, 115, 22, 0.8);
+  outline: 2px solid rgba(214, 90, 50, 0.7);
   outline-offset: 2px;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+button,
+a,
+input,
+textarea,
+select {
+  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+main {
+  animation: page-enter 260ms ease-out both;
+}
+
+.pageTitle {
+  font-size: 32px;
+}
+
+.productTitle {
+  font-size: 36px;
+}
+
+.aboutTitle {
+  font-size: 52px;
+}
+
+article,
+aside,
+section {
+  scroll-margin-top: 24px;
+}
+
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
+}
+
+@media (max-width: 600px) {
+  .productTitle { font-size: 30px; }
+  .aboutTitle { font-size: 38px; }
 }

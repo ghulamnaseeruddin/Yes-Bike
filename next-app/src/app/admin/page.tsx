@@ -15,8 +15,8 @@ type ProductDraft = { name: string; description: string; price: string; discount
 
 const emptyDraft: ProductDraft = { name: "", description: "", price: "", discountPrice: "", category: "", stock: "0", image: "", sizes: "", colors: "", featured: false };
 const statuses = ["Pending", "Confirmed", "Processing", "Shipped", "Delivered", "Cancelled"];
-const inputStyle = { width: "100%", minWidth: 0, padding: 10, color: "#fff", background: "#0f172a", border: "1px solid rgba(255,255,255,.18)", borderRadius: 6 };
-const panelStyle = { background: "#111827", border: "1px solid rgba(255,255,255,.1)", borderRadius: 10, padding: 20 };
+const inputStyle = { width: "100%", minWidth: 0, padding: 10, color: "#202622", background: "#fff", border: "1px solid #d9ded9", borderRadius: 6 };
+const panelStyle = { background: "#fff", border: "1px solid #e1e6e0", borderRadius: 8, padding: 20 };
 
 export default function AdminPage() {
   const [authorized, setAuthorized] = useState<boolean | null>(null);
@@ -162,14 +162,14 @@ export default function AdminPage() {
     .reduce((total, order) => total + Number(order.total_price), 0);
 
   if (loading) return <main style={{ maxWidth: 1200, margin: "0 auto", padding: 32 }}><p>Loading admin workspace...</p></main>;
-  if (!authorized) return <main style={{ maxWidth: 720, margin: "0 auto", padding: "48px 20px" }}><section style={panelStyle}><h1>Admin access</h1><p>{message}</p><a href="/login" style={{ color: "#f97316" }}>Sign in</a></section></main>;
+  if (!authorized) return <main style={{ maxWidth: 720, margin: "0 auto", padding: "48px 20px" }}><section style={panelStyle}><h1>Admin access</h1><p>{message}</p><a href="/login" style={{ color: "#b84522" }}>Sign in</a></section></main>;
 
   return (
     <main style={{ maxWidth: 1200, margin: "0 auto", padding: "40px 20px 80px", display: "grid", gap: 28 }}>
-      <header><p style={{ color: "#f97316", textTransform: "uppercase", fontWeight: 700 }}>YES BIKE</p><h1 style={{ margin: 0 }}>Admin workspace</h1></header>
+      <header><p style={{ color: "#d65a32", textTransform: "uppercase", fontWeight: 700 }}>YES BIKE</p><h1 style={{ margin: 0 }}>Admin workspace</h1></header>
       {message && <p role="status">{message}</p>}
       <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 12 }}>
-        {[["Products", products.length], ["Orders", orders.length], ["Customers", users.filter((user) => user.role === "customer").length], ["COD order value", `R ${codOrderValue.toLocaleString("en-ZA")}`]].map(([label, value]) => <article key={String(label)} style={panelStyle}><span style={{ color: "#aab2bd" }}>{label}</span><strong style={{ display: "block", fontSize: 28, marginTop: 8 }}>{value}</strong></article>)}
+        {[["Products", products.length], ["Orders", orders.length], ["Customers", users.filter((user) => user.role === "customer").length], ["COD order value", `R ${codOrderValue.toLocaleString("en-ZA")}`]].map(([label, value]) => <article key={String(label)} style={panelStyle}><span style={{ color: "#68716b" }}>{label}</span><strong style={{ display: "block", fontSize: 28, marginTop: 8 }}>{value}</strong></article>)}
       </section>
 
       <section style={{ ...panelStyle, maxWidth: 760 }}>
@@ -186,7 +186,7 @@ export default function AdminPage() {
           <textarea placeholder="Description" value={draft.description} onChange={(event) => setDraft({ ...draft, description: event.target.value })} style={{ ...inputStyle, gridColumn: "1 / -1", minHeight: 90 }} />
           <label style={{ display: "flex", gap: 8, alignItems: "center" }}><input type="checkbox" checked={draft.featured} onChange={(event) => setDraft({ ...draft, featured: event.target.checked })} /> Featured</label>
           <div style={{ display: "flex", gap: 8, gridColumn: "1 / -1" }}>
-            <button disabled={saving} style={{ padding: "10px 16px", background: "#f97316", color: "#fff", border: 0, borderRadius: 6, fontWeight: 700 }}>{saving ? "Saving..." : editingId ? "Save changes" : "Create product"}</button>
+            <button disabled={saving} style={{ padding: "10px 16px", background: "#d65a32", color: "#fff", border: 0, borderRadius: 6, fontWeight: 700 }}>{saving ? "Saving..." : editingId ? "Save changes" : "Create product"}</button>
             {editingId && <button type="button" onClick={() => { setEditingId(""); setDraft(emptyDraft); }} style={{ padding: "10px 16px" }}>Cancel edit</button>}
           </div>
         </form>

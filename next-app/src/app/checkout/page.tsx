@@ -68,7 +68,7 @@ export default function CheckoutPage() {
   if (orderId) {
     return (
       <main style={{ maxWidth: 760, margin: "0 auto", padding: "56px 20px 80px" }}>
-        <section style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 12, padding: 28 }}>
+        <section style={{ background: "#fff", border: "1px solid #e1e6e0", borderRadius: 8, padding: 28 }}>
           <h1>Order received</h1>
           <p>Your cash-on-delivery order was recorded. Keep this reference for your records:</p>
           <strong>{orderId}</strong>
@@ -79,15 +79,15 @@ export default function CheckoutPage() {
 
   return (
     <main style={{ maxWidth: 1000, margin: "0 auto", padding: "40px 20px 80px" }}>
-      <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", marginBottom: 28 }}>Checkout</h1>
+      <h1 className="pageTitle" style={{ marginBottom: 28 }}>Checkout</h1>
       {items.length === 0 ? (
-        <section style={{ background: "#111827", borderRadius: 12, padding: 24 }}>
+        <section style={{ background: "#fff", border: "1px solid #e1e6e0", borderRadius: 8, padding: 24 }}>
           <p>Your cart is empty.</p>
-          <a href="/shop" style={{ color: "#f97316", fontWeight: 700 }}>Return to shop</a>
+          <a href="/shop" style={{ color: "#b84522", fontWeight: 700 }}>Return to shop</a>
         </section>
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 0.8fr", gap: 24 }}>
-          <form onSubmit={handleSubmit} style={{ background: "#111827", borderRadius: 12, padding: 24, border: "1px solid rgba(255,255,255,0.08)" }}>
+          <form onSubmit={handleSubmit} style={{ background: "#fff", borderRadius: 8, padding: 24, border: "1px solid #e1e6e0" }}>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
               <label style={{ display: "grid", gap: 8, gridColumn: "1 / -1" }}>
                 <span>Full name</span>
@@ -122,16 +122,16 @@ export default function CheckoutPage() {
                 <input name="postal_code" required autoComplete="postal-code" style={inputStyle} />
               </label>
             </div>
-            <p style={{ color: "#facc15", fontWeight: 700, margin: "20px 0 0" }}>Cash on delivery. No online payment is collected.</p>
+            <p style={{ color: "#8c650d", fontWeight: 700, margin: "20px 0 0" }}>Cash on delivery. No online payment is collected.</p>
             {message && <p role="alert" style={{ color: "#fca5a5", lineHeight: 1.5 }}>{message}</p>}
             {!hasSupabaseConfig && <p role="alert">Add the Supabase project URL and anon key to enable order placement.</p>}
             {!hasLiveProducts && <p role="alert">Demo products cannot be ordered. Load products from your Supabase database first.</p>}
-            <button type="submit" disabled={submitting || !hasSupabaseConfig || !hasLiveProducts} style={{ marginTop: 20, width: "100%", border: 0, background: "#f97316", color: "#fff", borderRadius: 8, padding: "14px 18px", fontWeight: 800, cursor: "pointer", opacity: submitting || !hasSupabaseConfig || !hasLiveProducts ? 0.55 : 1 }}>
+            <button type="submit" disabled={submitting || !hasSupabaseConfig || !hasLiveProducts} style={{ marginTop: 20, width: "100%", border: 0, background: "#d65a32", color: "#fff", borderRadius: 6, padding: "14px 18px", fontWeight: 700, cursor: "pointer", opacity: submitting || !hasSupabaseConfig || !hasLiveProducts ? 0.55 : 1 }}>
               {submitting ? "Placing order..." : "Place cash-on-delivery order"}
             </button>
           </form>
 
-          <aside style={{ alignSelf: "start", background: "#111827", borderRadius: 12, padding: 24, border: "1px solid rgba(255,255,255,0.08)" }}>
+          <aside style={{ alignSelf: "start", background: "#fff", borderRadius: 8, padding: 24, border: "1px solid #e1e6e0" }}>
             <h2 style={{ marginTop: 0 }}>Order summary</h2>
             {items.map((item) => (
               <div key={item.key} style={{ display: "flex", justifyContent: "space-between", gap: 16, margin: "12px 0" }}>
@@ -141,7 +141,7 @@ export default function CheckoutPage() {
             ))}
             <div style={{ display: "flex", justifyContent: "space-between", marginTop: 18 }}><span>Subtotal</span><strong>{`R ${subtotal.toLocaleString("en-ZA")}`}</strong></div>
             <div style={{ display: "flex", justifyContent: "space-between", marginTop: 10 }}><span>Delivery</span><strong>{`R ${shippingFee.toLocaleString("en-ZA")}`}</strong></div>
-            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 18, fontSize: "1.15rem", fontWeight: 800 }}><span>Total</span><span style={{ color: "#facc15" }}>{`R ${(subtotal + shippingFee).toLocaleString("en-ZA")}`}</span></div>
+            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 18, fontSize: "1.15rem", fontWeight: 800 }}><span>Total</span><span style={{ color: "#8c650d" }}>{`R ${(subtotal + shippingFee).toLocaleString("en-ZA")}`}</span></div>
           </aside>
         </div>
       )}
@@ -150,9 +150,9 @@ export default function CheckoutPage() {
 }
 
 const inputStyle = {
-  background: "#0f172a",
-  border: "1px solid rgba(255,255,255,0.15)",
-  color: "#fff",
+  background: "#fff",
+  border: "1px solid #d9ded9",
+  color: "#202622",
   borderRadius: 8,
   padding: "12px 14px",
   minWidth: 0,

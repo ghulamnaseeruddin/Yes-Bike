@@ -41,7 +41,7 @@ export default function AddToCartButton({ product }: { product: ProductRecord })
           </select>
         </label>
       )}
-      <button type="button" onClick={handleAdd} disabled={product.stock < 1} style={{ background: "#f97316", color: "#fff", padding: "12px 18px", border: 0, borderRadius: 8, fontWeight: 800, cursor: product.stock < 1 ? "not-allowed" : "pointer", opacity: product.stock < 1 ? 0.6 : 1 }}>
+      <button type="button" onClick={handleAdd} disabled={product.stock < 1} style={{ background: "#d65a32", color: "#fff", padding: "12px 18px", border: 0, borderRadius: 6, fontWeight: 700, cursor: product.stock < 1 ? "not-allowed" : "pointer", opacity: product.stock < 1 ? 0.6 : 1 }}>
         {product.stock < 1 ? "Out of stock" : added ? "Added to cart" : "Add to cart"}
       </button>
     </div>

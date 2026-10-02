@@ -23,20 +23,20 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
         <div style={{
           background: product.images[0]
             ? `linear-gradient(rgba(0,0,0,.04), rgba(0,0,0,.18)), url("${product.images[0]}") center/cover`
-            : "linear-gradient(135deg, #374151, #f97316)",
+            : "linear-gradient(135deg, #dfe5de, #f4f6f3)",
           minHeight: 420,
           borderRadius: 12,
         }} />
 
-        <div style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 28, padding: 28 }}>
-          <p style={{ color: "#fbcfe8", fontSize: 12, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 12 }}>{product.category}</p>
-          <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", marginBottom: 18 }}>{product.name}</h1>
-          <p style={{ color: "rgba(255,255,255,0.78)", lineHeight: 1.7, marginBottom: 20 }}>{product.description}</p>
+        <div style={{ background: "#fff", border: "1px solid #e1e6e0", borderRadius: 8, padding: 28 }}>
+          <p style={{ color: "#68716b", fontSize: 12, letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>{product.category}</p>
+          <h1 className="productTitle" style={{ marginBottom: 18 }}>{product.name}</h1>
+          <p style={{ color: "#59645c", lineHeight: 1.7, marginBottom: 20 }}>{product.description}</p>
 
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
-            <span style={{ fontSize: "2rem", fontWeight: 800, color: "#facc15" }}>{`R ${Number(product.price).toLocaleString("en-ZA")}`}</span>
+            <span style={{ fontSize: "2rem", fontWeight: 800, color: "#8c650d" }}>{`R ${Number(product.discountPrice ?? product.price).toLocaleString("en-ZA")}`}</span>
             {product.discountPrice && (
-              <span style={{ color: "rgba(255,255,255,0.6)", textDecoration: "line-through" }}>{`R ${Number(product.discountPrice).toLocaleString("en-ZA")}`}</span>
+              <span style={{ color: "#89938b", textDecoration: "line-through" }}>{`R ${Number(product.price).toLocaleString("en-ZA")}`}</span>
             )}
           </div>
 
@@ -44,7 +44,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             <p style={{ marginBottom: 8, fontWeight: 700 }}>Available sizes</p>
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               {product.sizes.map((size) => (
-                <span key={size} style={{ padding: "8px 12px", borderRadius: 999, border: "1px solid rgba(255,255,255,0.2)", color: "#fff" }}>{size}</span>
+                <span key={size} style={{ padding: "7px 10px", borderRadius: 5, border: "1px solid #d9ded9", color: "#39433c" }}>{size}</span>
               ))}
             </div>
           </div>
@@ -53,7 +53,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             <p style={{ marginBottom: 8, fontWeight: 700 }}>Available colors</p>
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               {product.colors.map((color) => (
-                <span key={color} style={{ padding: "8px 12px", borderRadius: 999, border: "1px solid rgba(255,255,255,0.2)", color: "#fff" }}>{color}</span>
+                <span key={color} style={{ padding: "7px 10px", borderRadius: 5, border: "1px solid #d9ded9", color: "#39433c" }}>{color}</span>
               ))}
             </div>
           </div>
@@ -62,7 +62,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             <AddToCartButton product={product} />
             <WishlistButton productId={product.id} />
           </div>
-          <a href="/cart" style={{ display: "inline-flex", marginTop: 12, color: "#fff", fontWeight: 700 }}>View cart</a>
+          <a href="/cart" style={{ display: "inline-flex", marginTop: 12, color: "#b84522", fontWeight: 700 }}>View cart</a>
         </div>
       </div>
       <ProductReviews productId={product.id} />

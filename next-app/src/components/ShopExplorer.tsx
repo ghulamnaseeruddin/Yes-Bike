@@ -48,16 +48,16 @@ export default function ShopExplorer({ products, categories, initialCategory = "
         <label style={labelStyle}>Category<select value={category} onChange={(event) => setCategory(event.target.value)} style={inputStyle}><option value="">All categories</option>{categories.map((value) => <option key={value}>{value}</option>)}</select></label>
         <label style={labelStyle}>Sort<select value={sort} onChange={(event) => setSort(event.target.value)} style={inputStyle}><option value="relevance">Best match</option><option value="price-low">Price: low to high</option><option value="price-high">Price: high to low</option><option value="name">Name</option></select></label>
       </div>
-      <p aria-live="polite" style={{ color: "#aab2bd" }}>{results.length} products</p>
+      <p aria-live="polite" style={{ color: "#68716b" }}>{results.length} products</p>
       {results.length === 0 ? <p>No gear matched those filters.</p> : <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 18 }}>
-        {results.map(({ product }) => <article key={product.id} style={{ background: "#111827", border: "1px solid rgba(255,255,255,.1)", borderRadius: 10, overflow: "hidden" }}>
+        {results.map(({ product }) => <article key={product.id} style={{ background: "#fff", border: "1px solid #e1e6e0", borderRadius: 8, overflow: "hidden" }}>
           <a href={`/products/${product.id}`} aria-label={`View ${product.name}`} style={{ display: "block", height: 210, background: product.images[0] ? `linear-gradient(0deg,rgba(0,0,0,.12),transparent),url("${product.images[0]}") center/cover` : "#29313c" }} />
-          <div style={{ padding: 16 }}><small style={{ color: "#f97316" }}>{product.category}</small><h2 style={{ fontSize: 18, minHeight: 44 }}>{product.name}</h2><p style={{ color: "#cbd5e1", lineHeight: 1.55 }}>{product.description}</p><div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}><strong style={{ color: "#facc15" }}>{`R ${(product.discountPrice ?? product.price).toLocaleString("en-ZA")}`}</strong><a href={`/products/${product.id}`} style={{ color: "#fff" }}>View</a></div></div>
+          <div style={{ padding: 16 }}><small style={{ color: "#d65a32" }}>{product.category}</small><h2 style={{ fontSize: 18, minHeight: 44 }}>{product.name}</h2><p style={{ color: "#59645c", lineHeight: 1.55 }}>{product.description}</p><div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}><strong style={{ color: "#8c650d" }}>{`R ${(product.discountPrice ?? product.price).toLocaleString("en-ZA")}`}</strong><a href={`/products/${product.id}`} style={{ color: "#b84522" }}>View</a></div></div>
         </article>)}
       </div>}
     </>
   );
 }
 
-const labelStyle = { display: "grid", gap: 6, color: "#cbd5e1", fontSize: 14 };
-const inputStyle = { width: "100%", minWidth: 0, padding: 11, color: "#fff", background: "#111827", border: "1px solid rgba(255,255,255,.2)", borderRadius: 6 };
+const labelStyle = { display: "grid", gap: 6, color: "#39433c", fontSize: 14 };
+const inputStyle = { width: "100%", minWidth: 0, padding: 11, color: "#202622", background: "#fff", border: "1px solid #d9ded9", borderRadius: 6 };

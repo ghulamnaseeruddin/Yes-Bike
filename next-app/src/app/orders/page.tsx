@@ -66,15 +66,15 @@ export default function OrdersPage() {
     <main style={{ maxWidth: 1000, margin: "0 auto", padding: "48px 20px 80px" }}>
       <h1>Your orders</h1>
       {loading ? <p>Loading orders...</p> : message ? (
-        <section style={panelStyle}><p>{message}</p><a href="/login" style={{ color: "#f97316" }}>Sign in</a></section>
+        <section style={panelStyle}><p>{message}</p><a href="/login" style={{ color: "#b84522" }}>Sign in</a></section>
       ) : orders.length === 0 ? (
-        <section style={panelStyle}><p>No orders yet.</p><a href="/shop" style={{ color: "#f97316" }}>Browse the shop</a></section>
+        <section style={panelStyle}><p>No orders yet.</p><a href="/shop" style={{ color: "#b84522" }}>Browse the shop</a></section>
       ) : (
         <div style={{ display: "grid", gap: 16 }}>
           {orders.map((order) => (
             <article key={order.id} style={panelStyle}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", gap: 16, flexWrap: "wrap" }}>
-                <div><h2 style={{ margin: 0 }}>Order {order.id.slice(0, 8).toUpperCase()}</h2><p style={{ color: "#aab2bd" }}>{new Date(order.created_at).toLocaleString()}</p></div>
+                <div><h2 style={{ margin: 0 }}>Order {order.id.slice(0, 8).toUpperCase()}</h2><p style={{ color: "#68716b" }}>{new Date(order.created_at).toLocaleString()}</p></div>
                 <strong>{order.order_status}</strong>
               </div>
               <ul style={{ paddingLeft: 20, lineHeight: 1.8 }}>
@@ -82,7 +82,7 @@ export default function OrdersPage() {
                   <li key={`${order.id}-${index}`}>{item.product_name} × {item.quantity}{item.size ? ` · ${item.size}` : ""}{item.color ? ` · ${item.color}` : ""}</li>
                 ))}
               </ul>
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", borderTop: "1px solid rgba(255,255,255,.1)", paddingTop: 14 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap", borderTop: "1px solid #e1e6e0", paddingTop: 14 }}>
                 <span>{order.delivery_method}</span>
                 <strong>{`R ${Number(order.total_price).toLocaleString("en-ZA")}`}</strong>
               </div>
@@ -94,4 +94,4 @@ export default function OrdersPage() {
   );
 }
 
-const panelStyle = { background: "#111827", border: "1px solid rgba(255,255,255,.1)", borderRadius: 10, padding: 22 };
+const panelStyle = { background: "#fff", border: "1px solid #e1e6e0", borderRadius: 8, padding: 22 };

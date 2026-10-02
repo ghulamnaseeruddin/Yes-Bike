@@ -71,7 +71,7 @@ export default function ProfilePage() {
       <h1>Profile</h1>
       {loading ? <p>Loading profile...</p> : profile ? (
         <form onSubmit={saveProfile} style={panelStyle}>
-          <p style={{ color: "#aab2bd" }}>Account: {profile.email}</p>
+          <p style={{ color: "#68716b" }}>Account: {profile.email}</p>
           <label style={labelStyle}>Full name
             <input autoComplete="name" value={fullName} onChange={(event) => setFullName(event.target.value)} style={inputStyle} />
           </label>
@@ -88,15 +88,15 @@ export default function ProfilePage() {
       ) : (
         <section style={panelStyle}>
           <p>{message || "This account profile is not available. Try signing out and back in."}</p>
-          <a href="/login" style={{ color: "#f97316" }}>Sign in or register</a>
+          <a href="/login" style={{ color: "#b84522" }}>Sign in or register</a>
         </section>
       )}
     </main>
   );
 }
 
-const panelStyle = { display: "grid", gap: 18, background: "#111827", border: "1px solid rgba(255,255,255,.1)", borderRadius: 10, padding: 24 };
+const panelStyle = { display: "grid", gap: 18, background: "#fff", border: "1px solid #e1e6e0", borderRadius: 8, padding: 24 };
 const labelStyle = { display: "grid", gap: 8 };
-const inputStyle = { width: "100%", minWidth: 0, padding: 12, color: "#fff", background: "#0f172a", border: "1px solid rgba(255,255,255,.18)", borderRadius: 6 };
-const primaryButton = { padding: "11px 16px", color: "#fff", background: "#f97316", border: 0, borderRadius: 6, fontWeight: 700, cursor: "pointer" };
-const secondaryButton = { padding: "11px 16px", color: "#fff", background: "transparent", border: "1px solid rgba(255,255,255,.2)", borderRadius: 6, cursor: "pointer" };
+const inputStyle = { width: "100%", minWidth: 0, padding: 12, color: "#202622", background: "#fff", border: "1px solid #d9ded9", borderRadius: 6 };
+const primaryButton = { padding: "11px 16px", color: "#fff", background: "#d65a32", border: 0, borderRadius: 6, fontWeight: 700, cursor: "pointer" };
+const secondaryButton = { padding: "11px 16px", color: "#39433c", background: "#fff", border: "1px solid #d9ded9", borderRadius: 6, cursor: "pointer" };

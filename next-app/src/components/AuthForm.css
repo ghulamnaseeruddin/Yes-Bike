@@ -12,6 +12,12 @@
 .authPanel {
   width: min(100%, 440px);
   padding: 12px 4px;
+  animation: auth-enter 420ms cubic-bezier(.2,.75,.25,1) both;
+}
+
+@keyframes auth-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .authBrand {
@@ -26,7 +32,7 @@
 
 .authBrand span { color: #d65a32; }
 .authEyebrow { margin-bottom: 10px; color: #8a938d; font-size: 11px; font-weight: 750; letter-spacing: .12em; }
-.authPanel h1 { margin: 0; color: #202622; font-size: clamp(28px, 5vw, 34px); font-weight: 700; line-height: 1.2; }
+.authPanel h1 { margin: 0; color: #202622; font-size: 32px; font-weight: 700; line-height: 1.2; }
 .authIntro { margin: 10px 0 26px; color: #68716b; font-size: 14px; line-height: 1.65; }
 
 .googleButton {
@@ -79,4 +85,5 @@
 @media (max-width: 480px) {
   .authShell { align-items: start; padding-top: 34px; }
   .authBrand { margin-bottom: 30px; }
+  .authPanel h1 { font-size: 28px; }
 }

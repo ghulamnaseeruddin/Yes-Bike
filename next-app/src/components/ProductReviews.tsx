@@ -45,15 +45,15 @@ export default function ProductReviews({ productId }: { productId: string }) {
   const average = reviews.length ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length : 0;
 
   return (
-    <section style={{ marginTop: 36, borderTop: "1px solid rgba(255,255,255,.12)", paddingTop: 24 }}>
+    <section style={{ marginTop: 36, borderTop: "1px solid #e1e6e0", paddingTop: 24 }}>
       <h2>Rider reviews</h2>
-      {reviews.length > 0 ? <p style={{ color: "#facc15" }}>★ {average.toFixed(1)} average · {reviews.length} reviews</p> : <p style={{ color: "#aab2bd" }}>No reviews yet.</p>}
-      {reviews.map((review) => <article key={review.id} style={{ borderTop: "1px solid rgba(255,255,255,.1)", padding: "14px 0" }}><strong style={{ color: "#facc15" }}>{"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}</strong><p style={{ color: "#cbd5e1", lineHeight: 1.6 }}>{review.comment || "A rider left a rating."}</p><small style={{ color: "#94a3b8" }}>{new Date(review.created_at).toLocaleDateString()}</small></article>)}
-      {userId && isDatabaseProduct && <form onSubmit={submitReview} style={{ display: "grid", gap: 10, maxWidth: 520, marginTop: 18 }}><label style={{ display: "grid", gap: 6 }}>Rating<select value={rating} onChange={(event) => setRating(event.target.value)} style={inputStyle}>{[5, 4, 3, 2, 1].map((value) => <option key={value} value={value}>{value} stars</option>)}</select></label><label style={{ display: "grid", gap: 6 }}>Review<textarea value={comment} onChange={(event) => setComment(event.target.value)} maxLength={1200} rows={4} style={inputStyle} /></label><button style={{ justifySelf: "start", padding: "10px 14px", background: "#f97316", border: 0, borderRadius: 6, color: "#fff", fontWeight: 700 }}>Submit review</button></form>}
-      {!userId && isDatabaseProduct && <a href="/login" style={{ color: "#f97316" }}>Sign in to review</a>}
-      {message && <p role="status" style={{ color: "#cbd5e1" }}>{message}</p>}
+      {reviews.length > 0 ? <p style={{ color: "#8c650d" }}>★ {average.toFixed(1)} average · {reviews.length} reviews</p> : <p style={{ color: "#68716b" }}>No reviews yet.</p>}
+      {reviews.map((review) => <article key={review.id} style={{ borderTop: "1px solid #e1e6e0", padding: "14px 0" }}><strong style={{ color: "#8c650d" }}>{"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}</strong><p style={{ color: "#59645c", lineHeight: 1.6 }}>{review.comment || "A rider left a rating."}</p><small style={{ color: "#68716b" }}>{new Date(review.created_at).toLocaleDateString()}</small></article>)}
+      {userId && isDatabaseProduct && <form onSubmit={submitReview} style={{ display: "grid", gap: 10, maxWidth: 520, marginTop: 18 }}><label style={{ display: "grid", gap: 6 }}>Rating<select value={rating} onChange={(event) => setRating(event.target.value)} style={inputStyle}>{[5, 4, 3, 2, 1].map((value) => <option key={value} value={value}>{value} stars</option>)}</select></label><label style={{ display: "grid", gap: 6 }}>Review<textarea value={comment} onChange={(event) => setComment(event.target.value)} maxLength={1200} rows={4} style={inputStyle} /></label><button style={{ justifySelf: "start", padding: "10px 14px", background: "#d65a32", border: 0, borderRadius: 6, color: "#fff", fontWeight: 700 }}>Submit review</button></form>}
+      {!userId && isDatabaseProduct && <a href="/login" style={{ color: "#b84522" }}>Sign in to review</a>}
+      {message && <p role="status" style={{ color: "#59645c" }}>{message}</p>}
     </section>
   );
 }
 
-const inputStyle = { width: "100%", minWidth: 0, padding: 10, color: "#fff", background: "#0f172a", border: "1px solid rgba(255,255,255,.18)", borderRadius: 6 };
+const inputStyle = { width: "100%", minWidth: 0, padding: 10, color: "#202622", background: "#fff", border: "1px solid #d9ded9", borderRadius: 6 };

@@ -29,20 +29,20 @@ export default function CartPage() {
 
   return (
     <main style={{ maxWidth: 1000, margin: "0 auto", padding: "40px 20px 80px" }}>
-      <h1 style={{ fontSize: "clamp(2rem, 4vw, 3rem)", marginBottom: 28 }}>Your cart</h1>
+      <h1 className="pageTitle" style={{ marginBottom: 28 }}>Your cart</h1>
 
       {items.length === 0 ? (
-        <div style={{ background: "#111827", borderRadius: 20, padding: 28, border: "1px solid rgba(255,255,255,0.08)" }}>
-          <p style={{ margin: 0, color: "rgba(255,255,255,0.8)" }}>Your cart is empty. Add a few riding essentials from the shop.</p>
+        <div style={{ background: "#fff", borderRadius: 8, padding: 28, border: "1px solid #e1e6e0" }}>
+          <p style={{ margin: 0, color: "#59645c" }}>Your cart is empty. Add a few riding essentials from the shop.</p>
         </div>
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "1.3fr 0.7fr", gap: 24 }}>
           <div style={{ display: "grid", gap: 16 }}>
             {items.map((item) => (
-              <div key={item.key} style={{ background: "#111827", borderRadius: 18, border: "1px solid rgba(255,255,255,0.08)", padding: 18, display: "flex", justifyContent: "space-between", gap: 16, alignItems: "center" }}>
+              <div key={item.key} style={{ background: "#fff", borderRadius: 8, border: "1px solid #e1e6e0", padding: 18, display: "flex", justifyContent: "space-between", gap: 16, alignItems: "center" }}>
                 <div>
                   <h3 style={{ margin: 0 }}>{item.name}</h3>
-                  <p style={{ margin: "8px 0 0", color: "rgba(255,255,255,0.7)" }}>{item.size} · {item.color}</p>
+                  <p style={{ margin: "8px 0 0", color: "#68716b" }}>{item.size} · {item.color}</p>
                   <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 12 }}>
                     <button type="button" onClick={() => updateQuantity(item.key, item.quantity - 1)} aria-label={`Remove one ${item.name}`} style={{ width: 32, height: 32 }}>−</button>
                     <span>{item.quantity}</span>
@@ -50,12 +50,12 @@ export default function CartPage() {
                     <button type="button" onClick={() => updateQuantity(item.key, 0)} style={{ marginLeft: 8 }}>Remove</button>
                   </div>
                 </div>
-                <strong style={{ color: "#facc15" }}>{`R ${(item.price * item.quantity).toLocaleString("en-ZA")}`}</strong>
+                <strong style={{ color: "#8c650d" }}>{`R ${(item.price * item.quantity).toLocaleString("en-ZA")}`}</strong>
               </div>
             ))}
           </div>
 
-          <aside style={{ background: "#111827", borderRadius: 18, padding: 24, border: "1px solid rgba(255,255,255,0.08)" }}>
+          <aside style={{ background: "#fff", borderRadius: 8, padding: 24, border: "1px solid #e1e6e0" }}>
             <h3 style={{ marginTop: 0 }}>Summary</h3>
             <div style={{ display: "flex", justifyContent: "space-between", margin: "14px 0" }}>
               <span>Subtotal</span>
@@ -67,10 +67,10 @@ export default function CartPage() {
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", margin: "16px 0 20px", fontSize: "1.2rem", fontWeight: 800 }}>
               <span>Total</span>
-              <span style={{ color: "#facc15" }}>{`R ${(subtotal + 100).toLocaleString("en-ZA")}`}</span>
+              <span style={{ color: "#8c650d" }}>{`R ${(subtotal + 100).toLocaleString("en-ZA")}`}</span>
             </div>
 
-            <a href="/checkout" style={{ display: "inline-flex", width: "100%", justifyContent: "center", background: "#f97316", color: "#fff", padding: "12px 16px", borderRadius: 12, fontWeight: 800, textDecoration: "none" }}>Proceed to checkout</a>
+            <a href="/checkout" style={{ display: "inline-flex", width: "100%", justifyContent: "center", background: "#d65a32", color: "#fff", padding: "12px 16px", borderRadius: 6, fontWeight: 700, textDecoration: "none" }}>Proceed to checkout</a>
           </aside>
         </div>
       )}

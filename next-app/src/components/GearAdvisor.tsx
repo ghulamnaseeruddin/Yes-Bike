@@ -35,12 +35,12 @@ export default function GearAdvisor({ products }: { products: ProductRecord[] })
   const recommendations = result?.productIds.map((id) => products.find((product) => product.id === id)).filter((product): product is ProductRecord => Boolean(product)) ?? [];
 
   return (
-    <section style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) auto", alignItems: "end", gap: 18, padding: 22, background: "#111827", border: "1px solid rgba(255,255,255,.12)", borderRadius: 10, marginTop: 24 }}>
-      <div><p style={{ color: "#f97316", textTransform: "uppercase", fontWeight: 700, margin: 0 }}>Gear advisor</p><h2 style={{ margin: "8px 0" }}>Find gear for your ride</h2><form onSubmit={askAdvisor} style={{ display: "flex", gap: 8, flexWrap: "wrap" }}><input value={question} onChange={(event) => setQuestion(event.target.value)} minLength={3} maxLength={500} required placeholder="Tell us about your ride, weather, or fit needs" style={{ flex: "1 1 280px", minWidth: 0, padding: 12, background: "#0f172a", color: "#fff", border: "1px solid rgba(255,255,255,.2)", borderRadius: 6 }} /><button disabled={busy} style={{ padding: "11px 16px", background: "#f97316", color: "#fff", border: 0, borderRadius: 6, fontWeight: 700 }}>{busy ? "Thinking..." : "Get suggestions"}</button></form></div>
-      <a href="/shop" style={{ color: "#cbd5e1" }}>Browse all gear</a>
-      {(message || result) && <div aria-live="polite" style={{ gridColumn: "1 / -1", borderTop: "1px solid rgba(255,255,255,.1)", paddingTop: 14 }}>
-        {message && <p style={{ margin: 0, color: "#cbd5e1" }}>{message}</p>}
-        {result && <><p style={{ marginTop: 0, lineHeight: 1.65 }}>{result.answer}</p><div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>{recommendations.map((product) => <a key={product.id} href={`/products/${product.id}`} style={{ color: "#facc15" }}>{product.name}</a>)}</div></>}
+    <section style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) auto", alignItems: "end", gap: 18, padding: 22, background: "#fff", border: "1px solid #e1e6e0", borderRadius: 8, marginTop: 24 }}>
+      <div><p style={{ color: "#d65a32", textTransform: "uppercase", fontWeight: 700, margin: 0 }}>Gear advisor</p><h2 style={{ margin: "8px 0" }}>Find gear for your ride</h2><form onSubmit={askAdvisor} style={{ display: "flex", gap: 8, flexWrap: "wrap" }}><input value={question} onChange={(event) => setQuestion(event.target.value)} minLength={3} maxLength={500} required placeholder="Tell us about your ride, weather, or fit needs" style={{ flex: "1 1 280px", minWidth: 0, padding: 12, background: "#fff", color: "#202622", border: "1px solid #d9ded9", borderRadius: 6 }} /><button disabled={busy} style={{ padding: "11px 16px", background: "#d65a32", color: "#fff", border: 0, borderRadius: 6, fontWeight: 700 }}>{busy ? "Thinking..." : "Get suggestions"}</button></form></div>
+      <a href="/shop" style={{ color: "#59645c" }}>Browse all gear</a>
+      {(message || result) && <div aria-live="polite" style={{ gridColumn: "1 / -1", borderTop: "1px solid #e1e6e0", paddingTop: 14 }}>
+        {message && <p style={{ margin: 0, color: "#59645c" }}>{message}</p>}
+        {result && <><p style={{ marginTop: 0, lineHeight: 1.65 }}>{result.answer}</p><div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>{recommendations.map((product) => <a key={product.id} href={`/products/${product.id}`} style={{ color: "#8c650d" }}>{product.name}</a>)}</div></>}
       </div>}
     </section>
   );

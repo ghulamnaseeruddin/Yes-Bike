@@ -9,8 +9,8 @@ export default async function ShopPage({ searchParams }: { searchParams: Promise
   return (
     <main style={{ maxWidth: 1200, margin: "0 auto", padding: "40px 20px 80px" }}>
       <div style={{ marginBottom: 28 }}>
-        <p style={{ color: "#f97316", textTransform: "uppercase", letterSpacing: "0.16em", fontWeight: 700, marginBottom: 10 }}>Shop</p>
-        <h1 style={{ fontSize: "clamp(2.2rem, 4vw, 3.5rem)", margin: 0 }}>Ride-ready gear</h1>
+        <p style={{ color: "#d65a32", textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 700, marginBottom: 10 }}>Shop</p>
+        <h1 className="productTitle" style={{ margin: 0 }}>Ride-ready gear</h1>
       </div>
 
       <GearAdvisor products={products} />
