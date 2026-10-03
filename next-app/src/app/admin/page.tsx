@@ -15,8 +15,22 @@ type ProductDraft = { name: string; description: string; price: string; discount
 
 const emptyDraft: ProductDraft = { name: "", description: "", price: "", discountPrice: "", category: "", stock: "0", image: "", sizes: "", colors: "", featured: false };
 const statuses = ["Pending", "Confirmed", "Processing", "Shipped", "Delivered", "Cancelled"];
+const LOW_STOCK_LIMIT = 5;
+const DAY_MS = 86_400_000;
 const inputStyle = { width: "100%", minWidth: 0, padding: 10, color: "#202622", background: "#fff", border: "1px solid #d9ded9", borderRadius: 6 };
 const panelStyle = { background: "#fff", border: "1px solid #e1e6e0", borderRadius: 8, padding: 20 };
+const tableStyle = { width: "100%", borderCollapse: "collapse" as const, textAlign: "left" as const, minWidth: 600 };
+const badgeStyle = { display: "inline-block", padding: "2px 8px", borderRadius: 999, fontSize: 12, fontWeight: 700 };
+
+function money(value: number) {
+  return `R ${value.toLocaleString("en-ZA")}`;
+}
+
+function StockBadge({ stock }: { stock: number }) {
+  if (stock <= 0) return <span style={{ ...badgeStyle, background: "#fde8e8", color: "#b42318" }}>Out of stock</span>;
+  if (stock <= LOW_STOCK_LIMIT) return <span style={{ ...badgeStyle, background: "#fff1e0", color: "#b54708" }}>Low: {stock}</span>;
+  return <>{stock}</>;
+}
 
 export default function AdminPage() {
   const [authorized, setAuthorized] = useState<boolean | null>(null);
@@ -29,6 +43,10 @@ export default function AdminPage() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [now] = useState(() => Date.now());
+  const [orderSearch, setOrderSearch] = useState("");
+  const [orderStatusFilter, setOrderStatusFilter] = useState("All");
+  const [showLowStockOnly, setShowLowStockOnly] = useState(false);
 
   useEffect(() => {
     async function loadDashboard() {
@@ -157,9 +175,36 @@ export default function AdminPage() {
     }
     setContacts((current) => current.map((contact) => contact.id === contactId ? { ...contact, status } : contact));
   }
-  const codOrderValue = orders
-    .filter((order) => order.order_status !== "Cancelled")
-    .reduce((total, order) => total + Number(order.total_price), 0);
+
+  // ---------- Sales numbers (cancelled orders are not counted) ----------
+  const activeOrders = orders.filter((order) => order.order_status !== "Cancelled");
+  const codOrderValue = activeOrders.reduce((total, order) => total + Number(order.total_price), 0);
+
+  function salesSince(fromTime: number) {
+    const matching = activeOrders.filter((order) => new Date(order.created_at).getTime() >= fromTime);
+    return { total: matching.reduce((sum, order) => sum + Number(order.total_price), 0), count: matching.length };
+  }
+
+  const startOfToday = new Date(now);
+  startOfToday.setHours(0, 0, 0, 0);
+  const salesCards = [
+    { label: "Sales today", ...salesSince(startOfToday.getTime()) },
+    { label: "Last 7 days", ...salesSince(now - 7 * DAY_MS) },
+    { label: "Last 30 days", ...salesSince(now - 30 * DAY_MS) },
+  ];
+
+  // ---------- Low stock ----------
+  const lowStockProducts = products.filter((product) => product.stock <= LOW_STOCK_LIMIT);
+  const visibleProducts = showLowStockOnly ? lowStockProducts : products;
+
+  // ---------- Order search and status filter ----------
+  const searchTerm = orderSearch.trim().toLowerCase();
+  const filteredOrders = orders.filter((order) => {
+    if (orderStatusFilter !== "All" && order.order_status !== orderStatusFilter) return false;
+    if (!searchTerm) return true;
+    return [order.id, order.customer_name, order.customer_email, order.customer_phone]
+      .some((value) => String(value ?? "").toLowerCase().includes(searchTerm));
+  });
 
   if (loading) return <main style={{ maxWidth: 1200, margin: "0 auto", padding: 32 }}><p>Loading admin workspace...</p></main>;
   if (!authorized) return <main style={{ maxWidth: 720, margin: "0 auto", padding: "48px 20px" }}><section style={panelStyle}><h1>Admin access</h1><p>{message}</p><a href="/login" style={{ color: "#b84522" }}>Sign in</a></section></main>;
@@ -168,9 +213,30 @@ export default function AdminPage() {
     <main style={{ maxWidth: 1200, margin: "0 auto", padding: "40px 20px 80px", display: "grid", gap: 28 }}>
       <header><p style={{ color: "#d65a32", textTransform: "uppercase", fontWeight: 700 }}>YES BIKE</p><h1 style={{ margin: 0 }}>Admin workspace</h1></header>
       {message && <p role="status">{message}</p>}
+
       <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))", gap: 12 }}>
-        {[["Products", products.length], ["Orders", orders.length], ["Customers", users.filter((user) => user.role === "customer").length], ["COD order value", `R ${codOrderValue.toLocaleString("en-ZA")}`]].map(([label, value]) => <article key={String(label)} style={panelStyle}><span style={{ color: "#68716b" }}>{label}</span><strong style={{ display: "block", fontSize: 28, marginTop: 8 }}>{value}</strong></article>)}
+        {[["Products", products.length], ["Orders", orders.length], ["Customers", users.filter((user) => user.role === "customer").length], ["Low stock", lowStockProducts.length], ["COD order value", money(codOrderValue)]].map(([label, value]) => <article key={String(label)} style={panelStyle}><span style={{ color: "#68716b" }}>{label}</span><strong style={{ display: "block", fontSize: 28, marginTop: 8 }}>{value}</strong></article>)}
       </section>
+
+      <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 12 }}>
+        {salesCards.map((card) => (
+          <article key={card.label} style={panelStyle}>
+            <span style={{ color: "#68716b" }}>{card.label}</span>
+            <strong style={{ display: "block", fontSize: 28, marginTop: 8 }}>{money(card.total)}</strong>
+            <small style={{ color: "#68716b" }}>{card.count} {card.count === 1 ? "order" : "orders"}</small>
+          </article>
+        ))}
+      </section>
+
+      {lowStockProducts.length > 0 && (
+        <section role="alert" style={{ ...panelStyle, background: "#fff8f1", borderColor: "#f5c9a0" }}>
+          <strong>⚠ {lowStockProducts.length} {lowStockProducts.length === 1 ? "product needs" : "products need"} restocking (stock {LOW_STOCK_LIMIT} or less)</strong>
+          <p style={{ margin: "8px 0 0" }}>
+            {lowStockProducts.slice(0, 8).map((product) => `${product.name} (${product.stock})`).join(" · ")}
+            {lowStockProducts.length > 8 ? ` · and ${lowStockProducts.length - 8} more` : ""}
+          </p>
+        </section>
+      )}
 
       <section style={{ ...panelStyle, maxWidth: 760 }}>
         <h2>{editingId ? "Edit product" : "Add product"}</h2>
@@ -193,16 +259,41 @@ export default function AdminPage() {
       </section>
 
       <section style={panelStyle}>
-        <h2>Products</h2>
-        <div style={{ overflowX: "auto" }}><table style={tableStyle}><thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Actions</th></tr></thead><tbody>
-          {products.map((product) => <tr key={product.id}><td>{product.name}</td><td>{product.category}</td><td>{`R ${Number(product.price).toLocaleString("en-ZA")}`}</td><td>{product.stock}</td><td><button type="button" onClick={() => beginEdit(product)}>Edit</button> <button type="button" onClick={() => void deleteProduct(product)}>Delete</button></td></tr>)}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+          <h2 style={{ margin: 0 }}>Products</h2>
+          <label style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <input type="checkbox" checked={showLowStockOnly} onChange={(event) => setShowLowStockOnly(event.target.checked)} /> Show low stock only
+          </label>
+        </div>
+        <div style={{ overflowX: "auto", marginTop: 12 }}><table style={tableStyle}><thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Actions</th></tr></thead><tbody>
+          {visibleProducts.map((product) => <tr key={product.id}><td>{product.name}</td><td>{product.category}</td><td>{money(Number(product.price))}</td><td><StockBadge stock={product.stock} /></td><td><button type="button" onClick={() => beginEdit(product)}>Edit</button> <button type="button" onClick={() => void deleteProduct(product)}>Delete</button></td></tr>)}
+          {visibleProducts.length === 0 && <tr><td colSpan={5}>{showLowStockOnly ? "No low-stock products. 🎉" : "No products yet."}</td></tr>}
         </tbody></table></div>
       </section>
 
       <section style={panelStyle}>
         <h2>Orders</h2>
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", margin: "12px 0 8px" }}>
+          <input
+            type="search"
+            placeholder="Search name, email, phone or order ID"
+            value={orderSearch}
+            onChange={(event) => setOrderSearch(event.target.value)}
+            style={{ ...inputStyle, flex: "1 1 260px", width: "auto" }}
+          />
+          <select
+            value={orderStatusFilter}
+            onChange={(event) => setOrderStatusFilter(event.target.value)}
+            style={{ ...inputStyle, flex: "0 1 200px", width: "auto" }}
+          >
+            <option value="All">All statuses</option>
+            {statuses.map((status) => <option key={status} value={status}>{status}</option>)}
+          </select>
+        </div>
+        <p style={{ color: "#68716b", fontSize: 13, margin: "0 0 8px" }}>Showing {filteredOrders.length} of {orders.length} orders</p>
         <div style={{ overflowX: "auto" }}><table style={tableStyle}><thead><tr><th>Order</th><th>Customer</th><th>Contact</th><th>Total</th><th>Status</th></tr></thead><tbody>
-          {orders.map((order) => <tr key={order.id}><td>{order.id.slice(0, 8).toUpperCase()}<br /><small>{new Date(order.created_at).toLocaleDateString()}</small></td><td>{order.customer_name}</td><td>{order.customer_email}<br />{order.customer_phone}</td><td>{`R ${Number(order.total_price).toLocaleString("en-ZA")}`}</td><td><select value={order.order_status} onChange={(event) => void changeOrderStatus(order.id, event.target.value)}>{statuses.map((status) => <option key={status}>{status}</option>)}</select></td></tr>)}
+          {filteredOrders.map((order) => <tr key={order.id}><td>{order.id.slice(0, 8).toUpperCase()}<br /><small>{new Date(order.created_at).toLocaleDateString()}</small></td><td>{order.customer_name}</td><td>{order.customer_email}<br />{order.customer_phone}</td><td>{money(Number(order.total_price))}</td><td><select value={order.order_status} onChange={(event) => void changeOrderStatus(order.id, event.target.value)}>{statuses.map((status) => <option key={status}>{status}</option>)}</select></td></tr>)}
+          {filteredOrders.length === 0 && <tr><td colSpan={5}>No orders match your search.</td></tr>}
         </tbody></table></div>
       </section>
 
@@ -223,5 +314,3 @@ export default function AdminPage() {
     </main>
   );
 }
-
-const tableStyle = { width: "100%", borderCollapse: "collapse" as const, textAlign: "left" as const, minWidth: 600 };
