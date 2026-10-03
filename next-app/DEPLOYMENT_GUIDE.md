@@ -12,6 +12,10 @@ The deployed app is the single Next.js project in this folder. Supabase hosts th
 
 ## 2. Configure authentication URLs
 
+### Allow immediate email/password signup
+
+In Supabase, open **Authentication → Sign In / Providers → Email** and turn **Confirm email** off (the label may appear as **Email confirmations**). Save the change. With confirmation disabled, Supabase returns a session immediately after a successful password signup, and the app sends the user straight to `/profile` without asking them to check email. Google OAuth is a separate provider and still requires its normal Google sign-in redirect.
+
 In Supabase **Authentication → URL Configuration**:
 
 - Set **Site URL** to `http://localhost:3000` while developing. After Vercel is deployed, change it to your production URL, such as `https://your-project.vercel.app`.
@@ -58,9 +62,8 @@ Run `npm install`, then `npm run dev`; open `http://localhost:3000`. Without Sup
 ## 4. Create the first administrator
 
 1. Start the app with Supabase configured.
-2. Register the account that should be the administrator at `/signup` (not `/auth`).
-3. Confirm the email if Supabase email confirmation is enabled.
-4. In the Supabase SQL Editor, replace the example email and run:
+2. Register the account that should be the administrator at `/signup` (not `/auth`). With **Confirm email** disabled, signup should open `/profile` immediately.
+3. In the Supabase SQL Editor, replace the example email and run:
 
 ```sql
 update public.profiles
@@ -91,7 +94,7 @@ Select Production and Preview environments as needed. Do **not** add `SUPABASE_S
 ## 6. Verify before launch
 
 - Open the production URL and verify home, categories, shop, product detail, and photos.
-- Create an account at `/signup`, confirm email, sign in at `/login`, and test Google OAuth if enabled.
+- Create an account at `/signup` and verify it opens `/profile` without an email-confirmation step; test sign-in at `/login` and Google OAuth if enabled.
 - Promote the first admin and verify `/admin` works only for admin accounts.
 - Test a contact message, wishlist, review, and a cash-on-delivery order; confirm the rows appear in Supabase.
 - Verify an out-of-stock item cannot be ordered and that the order total is recalculated by the database.

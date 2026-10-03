@@ -5,7 +5,6 @@ export async function signUpWithEmail(email: string, password: string, fullName?
     email: email.trim().toLowerCase(),
     password,
     options: {
-      emailRedirectTo: `${window.location.origin}/auth/callback?next=%2Fprofile`,
       data: {
         full_name: fullName?.trim() ?? "",
       },

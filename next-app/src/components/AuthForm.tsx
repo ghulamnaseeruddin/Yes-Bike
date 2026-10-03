@@ -35,7 +35,7 @@ export default function AuthForm({ mode, initialError = "" }: { mode: AuthMode; 
       if (error) {
         setStatus(error.message);
       } else if (mode === "signup" && !data.session) {
-        setStatus("Account created. Check your email to confirm your address, then sign in.");
+        setStatus("Instant sign-in is not enabled yet. In Supabase, turn off email confirmations under Authentication → Providers → Email, then try again.");
       } else {
         router.push("/profile");
         router.refresh();
