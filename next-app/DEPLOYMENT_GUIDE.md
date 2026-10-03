@@ -71,8 +71,10 @@ set role = 'admin'
 where lower(email) = lower('your-admin-email@example.com');
 ```
 
-5. Confirm exactly one row was updated. Sign out and back in, then open `/admin`.
-6. Promote additional accounts from the admin workspace. Do not make an account an admin by changing user metadata; authorization is based on `public.profiles.role` and database RLS.
+4. Confirm exactly one row was updated. Sign out and back in, then open `/admin`.
+5. Promote additional accounts from the admin workspace. Do not make an account an admin by changing user metadata; authorization is based on `public.profiles.role` and database RLS.
+
+The confirmation setting applies to new signups. Accounts created earlier while confirmation was required may remain unconfirmed; resolve those accounts in Supabase Auth Users before expecting password login to work.
 
 ## 5. Add credentials in Vercel
 
