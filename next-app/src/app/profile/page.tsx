@@ -56,14 +56,18 @@ export default function ProfilePage() {
       setMessage(error.message);
       return;
     }
+    const { error: authError } = await supabase.auth.updateUser({ data: { full_name: fullName.trim(), name: fullName.trim() } });
     setProfile(data);
-    setMessage("Profile saved.");
+    setMessage(authError ? "Profile saved, but the account display name could not be synced." : "Profile saved.");
   }
 
   async function signOut() {
     const { error } = await supabase.auth.signOut();
     if (error) setMessage(error.message);
-    else router.push("/auth");
+    else {
+      router.push("/login");
+      router.refresh();
+    }
   }
 
   return (

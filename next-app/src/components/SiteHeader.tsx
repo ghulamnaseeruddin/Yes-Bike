@@ -2,9 +2,43 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import type { User } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabase";
+
+function getAccountLabel(user: User) {
+  const metadata = user.user_metadata;
+  const name = metadata.full_name || metadata.name || user.email?.split("@")[0] || "Account";
+  const initials = String(name).trim().split(/\s+/).slice(0, 2).map((part: string) => part[0]?.toUpperCase()).join("");
+  return { name: String(name), initials: initials || "A" };
+}
 
 export default function SiteHeader() {
   const pathname = usePathname();
+  const [account, setAccount] = useState<{ name: string; initials: string } | null>(null);
+  const [authResolved, setAuthResolved] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    void supabase.auth.getUser().then(({ data, error }) => {
+      if (!active) return;
+      setAccount(!error && data.user ? getAccountLabel(data.user) : null);
+      setAuthResolved(true);
+    }).catch(() => {
+      if (active) setAuthResolved(true);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setAccount(session?.user ? getAccountLabel(session.user) : null);
+      setAuthResolved(true);
+    });
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
+  }, []);
+
   if (pathname === "/login" || pathname === "/signup" || pathname === "/auth") return null;
 
   return (
@@ -19,9 +53,17 @@ export default function SiteHeader() {
           <Link href="/wishlist">Wishlist</Link>
           <Link href="/cart">Cart</Link>
           <Link href="/orders">Orders</Link>
-          <Link href="/profile">Profile</Link>
           <Link href="/admin">Admin</Link>
-          <Link href="/login" style={{ padding: "8px 12px", borderRadius: 5, background: "#d65a32", color: "#fff", fontWeight: 700 }}>Sign in</Link>
+          {authResolved && account ? (
+            <Link href="/profile" className="accountLink" aria-label={`Open ${account.name}'s profile settings`}>
+              <span className="accountAvatar" aria-hidden="true">{account.initials}</span>
+              <span>{account.name}</span>
+            </Link>
+          ) : authResolved ? (
+            <Link href="/login" className="headerSignIn">Sign in</Link>
+          ) : (
+            <span className="accountLoading" aria-label="Loading account" />
+          )}
         </div>
       </nav>
     </header>
