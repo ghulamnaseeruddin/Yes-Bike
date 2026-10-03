@@ -12,6 +12,30 @@ The deployed app is the single Next.js project in this folder. Supabase hosts th
 
 If this database was already initialized, rerun `supabase/schema.sql` after updating the repository. It adds `admin_notified_at` columns used to avoid duplicate notifications.
 
+### Fix “Could not find table in the schema cache”
+
+If the app reports that `public.profiles`, `public.orders`, or `public.wishlist_items` is missing, the deployed app is reaching a Supabase project where the schema has not been created (or it is reaching a different project):
+
+1. In Vercel **Project Settings → Environment Variables**, check the `NEXT_PUBLIC_SUPABASE_URL` value privately. Do not paste the key or full environment value into chat.
+2. Open the Supabase project whose **Project URL** matches that Vercel URL exactly.
+3. In that project's SQL Editor, run the complete `supabase/schema.sql` file from this folder. Check the Results panel and fix any SQL error before continuing.
+4. In **Table Editor**, confirm `profiles`, `products`, `orders`, `order_items`, `reviews`, `wishlist_items`, and `contacts` exist in the `public` schema.
+5. Run `supabase/demo-products.sql` to add the demo catalog.
+6. If all tables exist but PostgREST still reports a schema-cache error, run this in SQL Editor, wait a few seconds, then refresh the website:
+
+  ```sql
+  notify pgrst, 'reload schema';
+  ```
+
+The schema creates a profile automatically for new signups. If users registered before the schema/trigger was installed, backfill their profile rows once in SQL Editor:
+
+```sql
+insert into public.profiles (id, email, full_name)
+select id, coalesce(email, ''), coalesce(raw_user_meta_data ->> 'full_name', '')
+from auth.users
+on conflict (id) do update set email = excluded.email;
+```
+
 ## 2. Configure authentication URLs
 
 ### Allow immediate email/password signup
