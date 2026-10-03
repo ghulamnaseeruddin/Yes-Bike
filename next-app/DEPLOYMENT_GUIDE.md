@@ -1,49 +1,100 @@
-# YES BIKE deployment
+# YES BIKE: Supabase and Vercel setup
 
-## 1. Configure Supabase
+The deployed app is the single Next.js project in this folder. Supabase hosts the database and authentication; Vercel hosts the Next.js app and stores its environment variables. There is no MongoDB connection and no online payment provider.
 
-1. Create a Supabase project.
-2. In the SQL Editor, run `supabase/schema.sql`.
-3. Run `supabase/demo-products.sql` to add 100 illustrative demo products and their image URLs.
-4. Set Authentication's site URL and allowed redirects to include `http://localhost:3000/auth/callback` and `https://<your-vercel-domain>/auth/callback`.
-5. Copy the project URL and anon/publishable key. Never put a service-role key in client variables.
+## 1. Create the Supabase project and database
 
-For Google login, enable the Google provider under Supabase Authentication → Sign In / Providers. Add the Supabase callback URL shown there (usually `https://<project-ref>.supabase.co/auth/v1/callback`) to the OAuth client in Google Cloud, then add the local and deployed `/auth/callback` URLs to Supabase's redirect allowlist.
+1. Create a project at [supabase.com](https://supabase.com). Save the database password in your password manager; it is not needed by this app.
+2. Open the project's **SQL Editor** and choose a new query.
+3. Copy the complete contents of `supabase/schema.sql`, paste it into the editor, and run it. This creates the tables, signup profile trigger, row-level security policies, admin checks, and the cash-on-delivery order function.
+4. Open a second SQL query, copy all of `supabase/demo-products.sql`, and run it. This inserts 100 illustrative demo listings with Unsplash image URLs. These are mock catalog records, not real inventory.
+5. In Supabase **Project Settings → API** (or **API Keys**), copy the **Project URL** and the public **anon/publishable key**. The app uses the public key with RLS; it does not require a database password or service-role key.
 
-To promote the first administrator, register that account at `/auth` and then run this in the SQL Editor with its email:
+## 2. Configure authentication URLs
+
+In Supabase **Authentication → URL Configuration**:
+
+- Set **Site URL** to `http://localhost:3000` while developing. After Vercel is deployed, change it to your production URL, such as `https://your-project.vercel.app`.
+- Add these **Redirect URLs**:
+  - `http://localhost:3000/auth/callback`
+  - `https://your-project.vercel.app/auth/callback`
+  - If using a custom domain, add `https://your-domain.example/auth/callback` too.
+
+Use your actual Vercel/custom domain, not the example domains above.
+
+### Enable Google sign-in
+
+1. In Google Cloud Console, create an OAuth client for a Web application and add the Supabase callback URI shown in Supabase's Google provider panel. It normally looks like `https://<project-ref>.supabase.co/auth/v1/callback`.
+2. In Supabase, open **Authentication → Sign In / Providers → Google**, enable Google, and enter the Google OAuth client ID and client secret.
+3. Save the provider settings. Keep the Google client secret in Supabase only; do not put it in `NEXT_PUBLIC_*` variables.
+4. Make sure the local and deployed `/auth/callback` URLs are in Supabase's redirect allowlist as above.
+
+## 3. Configure local development (optional)
+
+From this `next-app` directory in the VS Code terminal:
+
+```powershell
+Copy-Item .env.example .env.local
+```
+
+Open `.env.local` and replace the placeholders with your real Supabase values:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-public-anon-or-publishable-key
+```
+
+Optional gear-advisor variables:
+
+```env
+GROQ_API_KEY=your-groq-key
+GROQ_MODEL=openai/gpt-oss-20b
+```
+
+Get the Groq key from [console.groq.com/keys](https://console.groq.com/keys). The advisor is optional and subject to Groq's account quotas/rate limits. Never put that key behind a `NEXT_PUBLIC_` name. Keep `.env.local` private and uncommitted.
+
+Run `npm install`, then `npm run dev`; open `http://localhost:3000`. Without Supabase credentials the catalog uses demo data, but sign-in, admin, wishlist, contact storage, and persistent COD orders will not work.
+
+## 4. Create the first administrator
+
+1. Start the app with Supabase configured.
+2. Register the account that should be the administrator at `/signup` (not `/auth`).
+3. Confirm the email if Supabase email confirmation is enabled.
+4. In the Supabase SQL Editor, replace the example email and run:
 
 ```sql
 update public.profiles
 set role = 'admin'
-where email = 'your-admin-email@example.com';
+where lower(email) = lower('your-admin-email@example.com');
 ```
 
-Sign out and back in, then open `/admin`.
+5. Confirm exactly one row was updated. Sign out and back in, then open `/admin`.
+6. Promote additional accounts from the admin workspace. Do not make an account an admin by changing user metadata; authorization is based on `public.profiles.role` and database RLS.
 
-## 2. Run locally
+## 5. Add credentials in Vercel
 
-```powershell
-npm install
-Copy-Item .env.example .env.local
-```
+1. Push the repository to GitHub and import it in Vercel.
+2. Set **Root Directory** to `next-app` and select the **Next.js** preset. Do not choose Services.
+3. Open **Project Settings → Environment Variables**. Add each variable separately, with no quotes or surrounding spaces:
 
-Set these values in `.env.local`:
+| Name | Value | Required? |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase Project URL | Yes for live auth/data |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon/publishable key | Yes for live auth/data |
+| `GROQ_API_KEY` | Groq API key | Optional advisor |
+| `GROQ_MODEL` | `openai/gpt-oss-20b` | Optional; advisor default |
 
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-```
+Select Production and Preview environments as needed. Do **not** add `SUPABASE_SERVICE_ROLE_KEY`, Google client secret, or a database password to the app's public variables. The browser-visible Supabase anon/publishable key is expected; RLS is what protects the data.
 
-Optionally add server-only `GROQ_API_KEY` and `GROQ_MODEL=openai/gpt-oss-20b` to enable the authenticated gear advisor. Groq free-tier use is subject to account quotas and rate limits. Never prefix the provider key with `NEXT_PUBLIC_`.
+4. Save the variables and deploy. If you add/change variables after a deployment, trigger a new deployment for them to take effect.
 
-Then run `npm run dev` and open `http://localhost:3000`.
+## 6. Verify before launch
 
-## 3. Deploy one Next.js project
+- Open the production URL and verify home, categories, shop, product detail, and photos.
+- Create an account at `/signup`, confirm email, sign in at `/login`, and test Google OAuth if enabled.
+- Promote the first admin and verify `/admin` works only for admin accounts.
+- Test a contact message, wishlist, review, and a cash-on-delivery order; confirm the rows appear in Supabase.
+- Verify an out-of-stock item cannot be ordered and that the order total is recalculated by the database.
+- Confirm Vercel deployment logs and Supabase logs are clean before accepting real orders.
 
-1. Push the repository to GitHub and import it into Vercel.
-2. Set Vercel **Root Directory** to `next-app`.
-3. Use the detected Next.js preset and default `npm run build` command. Do not choose the Services preset.
-4. Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in Vercel for Production and Preview. Optionally add server-only `GROQ_API_KEY` and `GROQ_MODEL` for AI suggestions.
-5. Deploy and smoke-test storefront, email signup/login, Google login, password visibility, cart, COD checkout, profile, order history, contact, wishlist, and admin flows.
-
-Demo browsing works without Supabase. Auth, contact storage, wishlist, reviews, admin, and persisted orders require the SQL schema and valid environment variables. Verify RLS, stock validation, and abuse controls before accepting real orders. No online payments are configured.
+If Supabase is not configured, Vercel can still serve the demo storefront, but live auth, admin data, and saved orders will not work. Add checkout rate limiting/abuse protection before opening anonymous orders to the public.
