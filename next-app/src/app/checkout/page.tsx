@@ -97,9 +97,9 @@ export default function CheckoutPage() {
           <a href="/shop" style={{ color: "#b84522", fontWeight: 700 }}>Return to shop</a>
         </section>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 0.8fr", gap: 24 }}>
+        <div className="stackTablet" style={{ display: "grid", gridTemplateColumns: "1fr 0.8fr", gap: 24 }}>
           <form onSubmit={handleSubmit} style={{ background: "#fff", borderRadius: 8, padding: 24, border: "1px solid #e1e6e0" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <div className="stackPhone" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
               <label style={{ display: "grid", gap: 8, gridColumn: "1 / -1" }}>
                 <span>Full name</span>
                 <input name="customer_name" required autoComplete="name" style={inputStyle} />

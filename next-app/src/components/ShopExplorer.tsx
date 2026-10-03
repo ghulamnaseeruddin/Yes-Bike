@@ -43,7 +43,7 @@ export default function ShopExplorer({ products, categories, initialCategory = "
 
   return (
     <>
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(220px,1fr) minmax(150px,.35fr) minmax(150px,.35fr)", gap: 10, margin: "24px 0" }}>
+      <div className="filterGrid" style={{ display: "grid", gridTemplateColumns: "minmax(220px,1fr) minmax(150px,.35fr) minmax(150px,.35fr)", gap: 10, margin: "24px 0" }}>
         <label style={labelStyle}>Search riding gear<input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Try ‘rain touring’ or ‘track protection’" style={inputStyle} /></label>
         <label style={labelStyle}>Category<select value={category} onChange={(event) => setCategory(event.target.value)} style={inputStyle}><option value="">All categories</option>{categories.map((value) => <option key={value}>{value}</option>)}</select></label>
         <label style={labelStyle}>Sort<select value={sort} onChange={(event) => setSort(event.target.value)} style={inputStyle}><option value="relevance">Best match</option><option value="price-low">Price: low to high</option><option value="price-high">Price: high to low</option><option value="name">Name</option></select></label>

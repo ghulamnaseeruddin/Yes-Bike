@@ -45,15 +45,48 @@ export default function ContactPage() {
   }
 
   return (
-    <main style={{ maxWidth: 1000, margin: "0 auto", padding: "44px 20px 80px", display: "grid", gridTemplateColumns: "minmax(220px,.8fr) minmax(320px,1.2fr)", gap: 40 }}>
-      <section><p style={{ color: "#d65a32", fontWeight: 700, textTransform: "uppercase" }}>Contact</p><h1>Talk to our team.</h1><p style={{ color: "#59645c", lineHeight: 1.7 }}>Send a product, sizing, or order question. We’ll get back to you using the contact details you provide.</p><p>YES BIKE<br />South Africa</p></section>
-      <form onSubmit={submitContact} style={{ display: "grid", gap: 14, background: "#fff", border: "1px solid #e1e6e0", borderRadius: 8, padding: 24 }}>
-        <label style={labelStyle}>Name<input required name="name" minLength={2} autoComplete="name" style={inputStyle} /></label>
-        <label style={labelStyle}>Email<input required type="email" name="email" autoComplete="email" style={inputStyle} /></label>
-        <label style={labelStyle}>Phone (optional)<input type="tel" name="phone" autoComplete="tel" style={inputStyle} /></label>
-        <label style={labelStyle}>Subject<input required name="subject" minLength={3} style={inputStyle} /></label>
-        <label style={labelStyle}>Message<textarea required name="message" minLength={10} rows={6} style={{ ...inputStyle, resize: "vertical" }} /></label>
-        <button disabled={sending} style={{ padding: "12px 16px", background: "#d65a32", border: 0, borderRadius: 6, color: "#fff", fontWeight: 700 }}>{sending ? "Sending..." : "Send message"}</button>
+    <main
+      className="stackTablet"
+      style={{ maxWidth: 1000, margin: "0 auto", padding: "44px 20px 80px", display: "grid", gridTemplateColumns: "minmax(220px,.8fr) minmax(320px,1.2fr)", gap: 40 }}
+    >
+      <section>
+        <p style={{ color: "#d65a32", fontWeight: 700, textTransform: "uppercase" }}>Contact</p>
+        <h1>Talk to our team.</h1>
+        <p style={{ color: "#59645c", lineHeight: 1.7 }}>
+          Send a product, sizing, or order question. We’ll get back to you using the contact details you provide.
+        </p>
+        <p>YES BIKE<br />South Africa</p>
+      </section>
+      <form
+        onSubmit={submitContact}
+        style={{ display: "grid", gap: 14, background: "#fff", border: "1px solid #e1e6e0", borderRadius: 8, padding: 24 }}
+      >
+        <label style={labelStyle}>
+          Name
+          <input required name="name" minLength={2} autoComplete="name" style={inputStyle} />
+        </label>
+        <label style={labelStyle}>
+          Email
+          <input required type="email" name="email" autoComplete="email" style={inputStyle} />
+        </label>
+        <label style={labelStyle}>
+          Phone (optional)
+          <input type="tel" name="phone" autoComplete="tel" style={inputStyle} />
+        </label>
+        <label style={labelStyle}>
+          Subject
+          <input required name="subject" minLength={3} style={inputStyle} />
+        </label>
+        <label style={labelStyle}>
+          Message
+          <textarea required name="message" minLength={10} rows={6} style={{ ...inputStyle, resize: "vertical" }} />
+        </label>
+        <button
+          disabled={sending}
+          style={{ padding: "12px 16px", background: "#d65a32", border: 0, borderRadius: 6, color: "#fff", fontWeight: 700 }}
+        >
+          {sending ? "Sending..." : "Send message"}
+        </button>
         {message && <p role="status">{message}</p>}
       </form>
     </main>

@@ -19,7 +19,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
   return (
     <main style={{ maxWidth: 1100, margin: "0 auto", padding: "40px 20px 80px" }}>
-      <div style={{ display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: 30 }}>
+      <div className="stackTablet" style={{ display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: 30 }}>
         <div style={{
           background: product.images[0]
             ? `linear-gradient(rgba(0,0,0,.04), rgba(0,0,0,.18)), url("${product.images[0]}") center/cover`

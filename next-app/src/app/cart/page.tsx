@@ -36,7 +36,7 @@ export default function CartPage() {
           <p style={{ margin: 0, color: "#59645c" }}>Your cart is empty. Add a few riding essentials from the shop.</p>
         </div>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "1.3fr 0.7fr", gap: 24 }}>
+        <div className="stackTablet" style={{ display: "grid", gridTemplateColumns: "1.3fr 0.7fr", gap: 24 }}>
           <div style={{ display: "grid", gap: 16 }}>
             {items.map((item) => (
               <div key={item.key} style={{ background: "#fff", borderRadius: 8, border: "1px solid #e1e6e0", padding: 18, display: "flex", justifyContent: "space-between", gap: 16, alignItems: "center" }}>
