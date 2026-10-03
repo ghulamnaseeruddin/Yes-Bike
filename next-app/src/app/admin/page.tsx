@@ -26,6 +26,14 @@ function money(value: number) {
   return `R ${value.toLocaleString("en-ZA")}`;
 }
 
+// Wraps a value for CSV and neutralises spreadsheet formulas (a cell starting with = + - @ could run code in Excel).
+function csvCell(value: string | number) {
+  let text = String(value ?? "");
+  const looksLikePhone = /^\+[\d\s()-]+$/.test(text);
+  if (!looksLikePhone && /^[=+\-@\t\r]/.test(text)) text = `'${text}`;
+  return `"${text.replace(/"/g, '""')}"`;
+}
+
 function StockBadge({ stock }: { stock: number }) {
   if (stock <= 0) return <span style={{ ...badgeStyle, background: "#fde8e8", color: "#b42318" }}>Out of stock</span>;
   if (stock <= LOW_STOCK_LIMIT) return <span style={{ ...badgeStyle, background: "#fff1e0", color: "#b54708" }}>Low: {stock}</span>;
@@ -206,6 +214,30 @@ export default function AdminPage() {
       .some((value) => String(value ?? "").toLowerCase().includes(searchTerm));
   });
 
+  // ---------- Export the orders currently shown to a CSV file (opens in Excel) ----------
+  function downloadOrdersCsv() {
+    const header = ["Order ID", "Date", "Customer", "Email", "Phone", "Status", "Total (ZAR)"];
+    const rows = filteredOrders.map((order) => [
+      order.id,
+      new Date(order.created_at).toISOString().slice(0, 10),
+      order.customer_name,
+      order.customer_email,
+      order.customer_phone,
+      order.order_status,
+      Number(order.total_price).toFixed(2),
+    ]);
+    const csv = [header, ...rows].map((row) => row.map(csvCell).join(",")).join("\r\n");
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `yesbike-orders-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
+
   if (loading) return <main style={{ maxWidth: 1200, margin: "0 auto", padding: 32 }}><p>Loading admin workspace...</p></main>;
   if (!authorized) return <main style={{ maxWidth: 720, margin: "0 auto", padding: "48px 20px" }}><section style={panelStyle}><h1>Admin access</h1><p>{message}</p><a href="/login" style={{ color: "#b84522" }}>Sign in</a></section></main>;
 
@@ -290,7 +322,18 @@ export default function AdminPage() {
             {statuses.map((status) => <option key={status} value={status}>{status}</option>)}
           </select>
         </div>
-        <p style={{ color: "#68716b", fontSize: 13, margin: "0 0 8px" }}>Showing {filteredOrders.length} of {orders.length} orders</p>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap", margin: "0 0 8px" }}>
+          <p style={{ color: "#68716b", fontSize: 13, margin: 0 }}>Showing {filteredOrders.length} of {orders.length} orders</p>
+          <button
+            type="button"
+            onClick={downloadOrdersCsv}
+            disabled={filteredOrders.length === 0}
+            style={{ padding: "8px 14px", background: "#fff", color: "#202622", border: "1px solid #d9ded9", borderRadius: 6, fontWeight: 700, cursor: filteredOrders.length === 0 ? "not-allowed" : "pointer" }}
+          >
+            Export to CSV
+          </button>
+        </div>
+        
         <div style={{ overflowX: "auto" }}><table style={tableStyle}><thead><tr><th>Order</th><th>Customer</th><th>Contact</th><th>Total</th><th>Status</th></tr></thead><tbody>
           {filteredOrders.map((order) => <tr key={order.id}><td>{order.id.slice(0, 8).toUpperCase()}<br /><small>{new Date(order.created_at).toLocaleDateString()}</small></td><td>{order.customer_name}</td><td>{order.customer_email}<br />{order.customer_phone}</td><td>{money(Number(order.total_price))}</td><td><select value={order.order_status} onChange={(event) => void changeOrderStatus(order.id, event.target.value)}>{statuses.map((status) => <option key={status}>{status}</option>)}</select></td></tr>)}
           {filteredOrders.length === 0 && <tr><td colSpan={5}>No orders match your search.</td></tr>}
