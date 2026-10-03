@@ -46,11 +46,11 @@ export default function SiteHeader() {
       <nav style={{ maxWidth: 1200, margin: "0 auto", padding: "14px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 18, flexWrap: "wrap" }}>
         <Link href="/" style={{ color: "#202622", fontSize: 18, fontWeight: 850, letterSpacing: ".03em" }}>YES<span style={{ color: "#d65a32" }}>BIKE</span></Link>
         <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center", fontSize: 13, color: "#515b53" }}>
-          <Link href="/shop">Shop</Link>
+          <Link href="/shop" prefetch={false}>Shop</Link>
           <Link href="/categories">Categories</Link>
           <Link href="/about">About</Link>
           <Link href="/contact">Contact</Link>
-          <Link href="/wishlist">Wishlist</Link>
+          <Link href="/wishlist" prefetch={false}>Wishlist</Link>
           <Link href="/cart">Cart</Link>
           <Link href="/orders">Orders</Link>
           <Link href="/admin">Admin</Link>
@@ -60,7 +60,7 @@ export default function SiteHeader() {
               <span>{account.name}</span>
             </Link>
           ) : authResolved ? (
-            <Link href="/login" className="headerSignIn">Sign in</Link>
+            <Link href="/login" className="headerSignIn" prefetch={false}>Sign in</Link>
           ) : (
             <span className="accountLoading" aria-label="Loading account" />
           )}

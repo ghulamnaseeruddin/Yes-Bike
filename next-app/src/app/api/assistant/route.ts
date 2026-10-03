@@ -26,10 +26,18 @@ export async function POST(request: Request) {
     if (authError || !user) {
       return NextResponse.json({ error: "Sign in to use the product advisor." }, { status: 401 });
     }
+
     const products = await getProducts();
-    const catalog = products.slice(0, 80).map(({ id, name, category, description, price, discountPrice, sizes, colors, stock }) => ({
-      id, name, category, description, price: discountPrice ?? price, sizes, colors, inStock: stock > 0,
+    const catalog = products.map(({ id, name, category, price, discountPrice, sizes, colors, stock }) => ({
+      id,
+      name,
+      category,
+      price: discountPrice ?? price,
+      sizes,
+      colors,
+      inStock: stock > 0,
     }));
+
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
@@ -46,8 +54,10 @@ export async function POST(request: Request) {
     });
 
     if (!response.ok) {
+      console.error("Groq error:", response.status, (await response.text()).slice(0, 500));
       return NextResponse.json({ error: "The product advisor is temporarily unavailable." }, { status: 502 });
     }
+
     const result = await response.json();
     const content = result.choices?.[0]?.message?.content;
     if (typeof content !== "string") throw new Error("The advisor returned an empty response.");
@@ -59,11 +69,13 @@ export async function POST(request: Request) {
     const productIds = Array.isArray(output.productIds)
       ? output.productIds.filter((id): id is string => typeof id === "string" && allowedIds.has(id)).slice(0, 4)
       : [];
+
     return NextResponse.json({
       answer: typeof output.answer === "string" ? output.answer.slice(0, 1200) : "I couldn't find a clear answer in the catalog.",
       productIds,
     });
-  } catch {
+  } catch (error) {
+    console.error("Assistant failure:", error);
     return NextResponse.json({ error: "The product advisor is temporarily unavailable." }, { status: 502 });
   }
 }

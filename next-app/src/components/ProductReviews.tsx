@@ -11,7 +11,7 @@ export default function ProductReviews({ productId }: { productId: string }) {
   const [rating, setRating] = useState("5");
   const [comment, setComment] = useState("");
   const [message, setMessage] = useState("");
-  const isDatabaseProduct = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(productId);
+  const isDatabaseProduct = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(productId);
 
   useEffect(() => {
     async function loadReviews() {
