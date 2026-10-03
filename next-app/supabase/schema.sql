@@ -38,12 +38,14 @@ create table if not exists public.orders (
   shipping_price numeric(10,2) not null default 0 check (shipping_price >= 0),
   total_price numeric(10,2) not null default 0 check (total_price >= 0),
   shipping_address jsonb not null,
+  admin_notified_at timestamptz,
   created_at timestamptz not null default now()
 );
 
 alter table public.orders add column if not exists customer_name text;
 alter table public.orders add column if not exists customer_email text;
 alter table public.orders add column if not exists customer_phone text;
+alter table public.orders add column if not exists admin_notified_at timestamptz;
 
 create table if not exists public.order_items (
   id uuid primary key default gen_random_uuid(),
@@ -81,8 +83,11 @@ create table if not exists public.contacts (
   subject text not null,
   message text not null,
   status text not null default 'New' check (status in ('New', 'In progress', 'Resolved')),
+  admin_notified_at timestamptz,
   created_at timestamptz not null default now()
 );
+
+alter table public.contacts add column if not exists admin_notified_at timestamptz;
 
 create index if not exists idx_products_category on public.products(category);
 create index if not exists idx_products_featured on public.products(featured);
@@ -224,6 +229,7 @@ with check ((select public.is_admin()));
 
 grant usage on schema public to anon, authenticated;
 revoke insert, update, delete on public.profiles, public.products, public.orders, public.order_items, public.reviews from anon, authenticated;
+revoke all on public.contacts from anon, authenticated;
 grant select on public.products, public.reviews to anon, authenticated;
 grant select on public.profiles, public.orders, public.order_items to authenticated;
 grant insert on public.reviews to authenticated;
@@ -231,7 +237,7 @@ grant update (full_name, phone, role) on public.profiles to authenticated;
 grant insert, update, delete on public.products to authenticated;
 grant update (order_status) on public.orders to authenticated;
 grant select, insert, delete on public.wishlist_items to authenticated;
-grant insert (name, email, phone, subject, message) on public.contacts to anon, authenticated;
+grant insert (id, name, email, phone, subject, message) on public.contacts to anon, authenticated;
 grant select on public.contacts to authenticated;
 grant update (status) on public.contacts to authenticated;
 

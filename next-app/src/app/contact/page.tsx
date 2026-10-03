@@ -13,20 +13,35 @@ export default function ContactPage() {
     setMessage("");
     const formElement = event.currentTarget;
     const form = new FormData(formElement);
+    const contactId = crypto.randomUUID();
     const { error } = await supabase.from("contacts").insert({
+      id: contactId,
       name: String(form.get("name")).trim(),
       email: String(form.get("email")).trim(),
       phone: String(form.get("phone")).trim() || null,
       subject: String(form.get("subject")).trim(),
       message: String(form.get("message")).trim(),
     });
-    setSending(false);
     if (error) {
+      setSending(false);
       setMessage(error.message);
       return;
     }
     formElement.reset();
-    setMessage("Thanks. Your message has been sent to the YES BIKE team.");
+    try {
+      const notification = await fetch("/api/admin-notifications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "contact", id: contactId }),
+      });
+      setMessage(notification.ok
+        ? "Thanks. Your message was sent to the YES BIKE team."
+        : "Your message was saved, but its email notification could not be sent. Please try contacting us again later.");
+    } catch {
+      setMessage("Your message was saved, but its email notification could not be sent. Please try contacting us again later.");
+    } finally {
+      setSending(false);
+    }
   }
 
   return (

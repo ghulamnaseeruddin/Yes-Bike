@@ -11,6 +11,7 @@ export default function CheckoutPage() {
   const [items, setItems] = useState<CartItem[]>([]);
   const [message, setMessage] = useState("");
   const [orderId, setOrderId] = useState("");
+  const [notificationMessage, setNotificationMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -63,6 +64,16 @@ export default function CheckoutPage() {
     clearCart();
     setItems([]);
     setOrderId(String(data));
+    try {
+      const notification = await fetch("/api/admin-notifications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "order", id: String(data) }),
+      });
+      if (!notification.ok) setNotificationMessage("Your order is saved, but the admin email notification could not be sent.");
+    } catch {
+      setNotificationMessage("Your order is saved, but the admin email notification could not be sent.");
+    }
   }
 
   if (orderId) {
@@ -72,6 +83,7 @@ export default function CheckoutPage() {
           <h1>Order received</h1>
           <p>Your cash-on-delivery order was recorded. Keep this reference for your records:</p>
           <strong>{orderId}</strong>
+          {notificationMessage && <p role="status" style={{ marginTop: 16, color: "#8c650d" }}>{notificationMessage}</p>}
         </section>
       </main>
     );
